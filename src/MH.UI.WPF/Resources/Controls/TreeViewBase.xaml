@@ -5,8 +5,10 @@
   xmlns:ap="clr-namespace:MH.UI.WPF.AttachedProperties"
   xmlns:c="clr-namespace:MH.UI.WPF.Controls"
   xmlns:conv="clr-namespace:MH.UI.WPF.Converters"
+  xmlns:res="clr-namespace:MH.UI.WPF.Resources"
   xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils"
-  xmlns:uiInt="clr-namespace:MH.UI.Interfaces;assembly=MH.UI">
+  xmlns:uiInt="clr-namespace:MH.UI.Interfaces;assembly=MH.UI"
+  xmlns:uInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils">
 
   <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,10 L5,5 z"/>
 
@@ -230,6 +232,54 @@
     </Grid>
   </DataTemplate>
 
+  <DataTemplate x:Key="MH.DT.TreeView-PathToRootBar" DataType="{x:Type uiInt:ITreeView}">
+    <ItemsControl
+      x:Name="ic"
+      ItemsSource="{Binding TopTreeItemPath}"
+      BorderThickness="0"
+      HorizontalAlignment="Left">
+
+      <ItemsControl.ItemTemplate>
+        <DataTemplate DataType="{x:Type uInt:IListItem}">
+          <Button
+            Command="{Binding Path=DataContext.(uiInt:ITreeView.ScrollToItemCommand), ElementName=ic}"
+            CommandParameter="{Binding}"
+            ap:Text.Text="{Binding Name}"
+            ap:Icon.Data="{Binding Icon, Converter={x:Static conv:ResourceConverter.Inst}}"
+            ap:Icon.Fill="{Binding Icon, Converter={x:Static conv:ResourceConverter.Inst},
+                           ConverterParameter={x:Static res:Dictionaries.IconToBrush}}">
+            <Button.Style>
+              <Style TargetType="Button" BasedOn="{StaticResource MH.S.ButtonBase}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="ap:Button.OverLayer" Value="{StaticResource MH.B.I.Hover.Ba}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource MH.B.I.Hover.Bo}"/>
+                  </Trigger>
+                  <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="ap:Button.OverLayer" Value="{StaticResource MH.B.I.Hover.Ba}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource MH.B.I.Hover.Bo}"/>
+                  </Trigger>
+                  <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="ap:Button.OverLayer" Value="{StaticResource MH.B.I.Selected.Ba}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource MH.B.I.Selected.Bo}"/>
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+          </Button>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+    </ItemsControl>
+  </DataTemplate>
+
   <Style x:Key="MH.S.TreeViewBase" TargetType="c:TreeViewBase">
     <Setter Property="Background" Value="{StaticResource MH.B.C.Static.Ba}"/>
     <Setter Property="BorderBrush" Value="{StaticResource MH.B.C.Static.Bo}"/>
@@ -247,6 +297,8 @@
     <Setter Property="VirtualizingPanel.CacheLength" Value="3"/>
     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
     <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+    <Setter Property="ap:Slot.TopContent" Value="{Binding TreeView, RelativeSource={RelativeSource Self}}"/>
+    <Setter Property="ap:Slot.TopContentTemplate" Value="{StaticResource MH.DT.TreeView-PathToRootBar}"/>
 
     <Setter Property="ItemsPanel">
       <Setter.Value>
@@ -259,15 +311,27 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="c:TreeViewBase">
-          <ScrollViewer
-            x:Name="PART_ScrollViewer"
-            Focusable="False"
-            Padding="{TemplateBinding Padding}"
-            ap:Slot.TopContent="{Binding TreeView, RelativeSource={RelativeSource TemplatedParent}}"
-            ap:Slot.TopContentTemplate="{StaticResource MH.DT.TreeViewBase.ScrollButtons}">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-            <ItemsPresenter/>
-          </ScrollViewer>
+            <ContentPresenter
+              Content="{Binding Path=(ap:Slot.TopContent), RelativeSource={RelativeSource TemplatedParent}}"
+              ContentTemplate="{Binding Path=(ap:Slot.TopContentTemplate), RelativeSource={RelativeSource TemplatedParent}}"/>
+
+            <ScrollViewer
+              x:Name="PART_ScrollViewer"
+              Grid.Row="1"
+              Focusable="False"
+              Padding="{TemplateBinding Padding}"
+              ap:Slot.TopContent="{Binding TreeView, RelativeSource={RelativeSource TemplatedParent}}"
+              ap:Slot.TopContentTemplate="{StaticResource MH.DT.TreeViewBase.ScrollButtons}">
+
+              <ItemsPresenter/>
+            </ScrollViewer>
+          </Grid>
 
           <ControlTemplate.Triggers>
             <Trigger SourceName="PART_ScrollViewer" Property="ComputedVerticalScrollBarVisibility" Value="Collapsed">

@@ -3,6 +3,7 @@ using MH.UI.WPF.Extensions;
 using MH.Utils;
 using MH.Utils.BaseClasses;
 using MH.Utils.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -53,7 +54,7 @@ public class TreeViewBase : TreeView {
   }
 
   public virtual void OnScrollChanged(object sender, ScrollChangedEventArgs e) {
-    if (!_isScrollingTo && TreeView != null && e.VerticalChange != 0 && _sv.IsVisible)
+    if (!_isScrollingTo && TreeView != null && _sv.IsVisible)
       TreeView.TopTreeItem = GetHitTestItem(10, 10);
 
     if (_resetHScroll) {
@@ -82,10 +83,13 @@ public class TreeViewBase : TreeView {
     if (_sv.VerticalOffset == 0) return;
     _sv.ScrollToTop();
     _sv.UpdateLayout();
+
+    if (!_sv.IsVisible && TreeView != null)
+      TreeView.TopTreeItem = GetHitTestItem(10, 10);
   }
 
   private void ScrollToItemsWhenReady(object[] items, bool exactly) {
-    Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ScrollToItems(items, exactly));
+    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ScrollToItems(items, exactly));
   }
 
   private void ScrollToItems(object[] items, bool exactly) {
@@ -108,14 +112,19 @@ public class TreeViewBase : TreeView {
       if (!GetDiff(idxItem, root, out diff) || diff == 0) return;
 
       // if diff wasn't it the view
-      var parent = ScrollIntoView(this, items);
-      parent.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
-        if (!GetDiff(idxItem, root, out diff) || diff == 0) return;
-        _sv.ScrollToVerticalOffset(_sv.VerticalOffset + diff);
-        _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => {
-          _isScrollingTo = false;
+      try {
+        var parent = ScrollIntoView(this, items);
+        parent.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
+          if (!GetDiff(idxItem, root, out diff) || diff == 0) return;
+          _sv.ScrollToVerticalOffset(_sv.VerticalOffset + diff);
+          _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => {
+            _isScrollingTo = false;
+          });
         });
-      });
+      }
+      catch (Exception e) {
+        Log.Error("TreeViewBase.ScrollIntoView wasn't successful!", e.Message);
+      }
     });
   }
 
@@ -134,7 +143,7 @@ public class TreeViewBase : TreeView {
   }
 
   private bool IsDiffInView(int idxItem, ITreeItem root) {
-    var bottomY = ActualHeight - 10;
+    var bottomY = _sv.ActualHeight - 10;
     if (_sv.ComputedHorizontalScrollBarVisibility == Visibility.Visible) bottomY -= 14;
     var idxTopItem = GetHitTestItem(10, 10)?.GetIndex(root);
     var idxBottomItem = GetHitTestItem(10, bottomY)?.GetIndex(root);
@@ -176,7 +185,7 @@ public class TreeViewBase : TreeView {
   /// So I collapsed the root on reload and expanded it after to load just what is in the view.
   /// </summary>
   private void ExpandRootWhenReady(ITreeItem root) {
-    Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
+    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
       root.IsExpanded = true;
     });
   }
@@ -190,7 +199,7 @@ public class TreeViewBase : TreeView {
     var pos = e.GetPosition(this);
     if (pos.Y < px)
       _sv.ScrollToVerticalOffset(_sv.VerticalOffset - unit);
-    else if (ActualHeight - pos.Y < px)
+    else if (_sv.ActualHeight - pos.Y < px)
       _sv.ScrollToVerticalOffset(_sv.VerticalOffset + unit);
   }
 }
