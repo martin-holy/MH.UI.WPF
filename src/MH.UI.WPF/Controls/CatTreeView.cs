@@ -14,20 +14,19 @@ public class CatTreeView : TreeViewBase {
   public DoDropAction DoDropAction { get; }
 
   public CatTreeView() {
-    CanDragFunc = CanDrag;
-    CanDropFunc = CanDrop;
-    DoDropAction = DoDrop;
+    CanDragFunc = _canDrag;
+    CanDropFunc = _canDrop;
+    DoDropAction = _doDrop;
   }
 
-  private static object? CanDrag(object source) {
-    return source is ITreeCategory
+  private static object? _canDrag(object source) =>
+    source is ITreeCategory
       ? null
       : Tree.GetParentOf<ITreeCategory>(source as ITreeItem) is null
         ? null
         : source;
-  }
 
-  private MH.Utils.DragDropEffects CanDrop(object? target, object? data, bool haveSameOrigin) {
+  private MH.Utils.DragDropEffects _canDrop(object? target, object? data, bool haveSameOrigin) {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return MH.Utils.DragDropEffects.None;
     _dragDropAutoScroll(e);
 
@@ -43,7 +42,7 @@ public class CatTreeView : TreeViewBase {
     return MH.Utils.DragDropEffects.None;
   }
 
-  private static void DoDrop(object data, bool haveSameOrigin) {
+  private static void _doDrop(object data, bool haveSameOrigin) {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return;
     var tvi = ((FrameworkElement)e.OriginalSource).FindTemplatedParent<TreeViewItem>();
     if (tvi?.DataContext is not ITreeItem dest ||
