@@ -29,7 +29,7 @@ public class CatTreeView : TreeViewBase {
 
   private MH.Utils.DragDropEffects CanDrop(object? target, object? data, bool haveSameOrigin) {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return MH.Utils.DragDropEffects.None;
-    DragDropAutoScroll(e);
+    _dragDropAutoScroll(e);
 
     var cat = Tree.GetParentOf<ITreeCategory>(target as ITreeItem);
 

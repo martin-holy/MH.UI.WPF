@@ -27,35 +27,35 @@ public class TreeViewBase : TreeView {
     set => SetValue(TreeViewProperty, value);
   }
 
-  public RelayCommand<RequestBringIntoViewEventArgs> TreeItemIntoViewCommand { get; set; }
+  public RelayCommand<RequestBringIntoViewEventArgs> TreeItemIntoViewCommand { get; }
 
   public TreeViewBase() {
-    TreeItemIntoViewCommand = new(OnTreeItemIntoView);
+    TreeItemIntoViewCommand = new(_onTreeItemIntoView);
   }
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
 
     _sv = (ScrollViewer)Template.FindName("PART_ScrollViewer", this);
-    _sv.IsVisibleChanged += delegate { SetIsVisible(); };
-    _sv.ScrollChanged += OnScrollChanged;
+    _sv.IsVisibleChanged += delegate { _setIsVisible(); };
+    _sv.ScrollChanged += _onScrollChanged;
 
-    SetIsVisible();
-    SetItemsSource();
+    _setIsVisible();
+    _setItemsSource();
   }
 
-  private void SetIsVisible() {
+  private void _setIsVisible() {
     if (TreeView != null) TreeView.IsVisible = _sv.IsVisible;
   }
 
-  private void OnTreeItemIntoView(RequestBringIntoViewEventArgs? e) {
+  private void _onTreeItemIntoView(RequestBringIntoViewEventArgs? e) {
     _resetHScroll = true;
     _resetHOffset = _sv.HorizontalOffset;
   }
 
-  public virtual void OnScrollChanged(object sender, ScrollChangedEventArgs e) {
+  private void _onScrollChanged(object sender, ScrollChangedEventArgs e) {
     if (!_isScrollingTo && TreeView != null && _sv.IsVisible)
-      TreeView.TopTreeItem = GetHitTestItem(10, 10);
+      TreeView.TopTreeItem = _getHitTestItem(10, 10);
 
     if (_resetHScroll) {
       _resetHScroll = false;
@@ -63,7 +63,7 @@ public class TreeViewBase : TreeView {
     }
   }
 
-  private void SetItemsSource() {
+  private void _setItemsSource() {
     if (TreeView == null) return;
     var expand = false;
     var root = TreeView.RootHolder.FirstOrDefault() as ITreeItem;
@@ -72,35 +72,34 @@ public class TreeViewBase : TreeView {
       root.IsExpanded = false;
     }
     ItemsSource = TreeView.RootHolder;
-    if (expand) ExpandRootWhenReady(root!);
+    if (expand) _expandRootWhenReady(root!);
 
-    TreeView.ScrollToTopAction = ScrollToTop;
-    TreeView.ScrollToItemsAction = ScrollToItemsWhenReady;
-    TreeView.ExpandRootWhenReadyAction = ExpandRootWhenReady;
+    TreeView.ScrollToTopAction = _scrollToTop;
+    TreeView.ScrollToItemsAction = _scrollToItemsWhenReady;
+    TreeView.ExpandRootWhenReadyAction = _expandRootWhenReady;
   }
 
-  private void ScrollToTop() {
+  private void _scrollToTop() {
     if (_sv.VerticalOffset == 0) return;
     _sv.ScrollToTop();
     _sv.UpdateLayout();
 
     if (!_sv.IsVisible && TreeView != null)
-      TreeView.TopTreeItem = GetHitTestItem(10, 10);
+      TreeView.TopTreeItem = _getHitTestItem(10, 10);
   }
 
-  private void ScrollToItemsWhenReady(object[] items, bool exactly) {
-    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => ScrollToItems(items, exactly));
-  }
+  private void _scrollToItemsWhenReady(object[] items, bool exactly) =>
+    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => _scrollToItems(items, exactly));
 
-  private void ScrollToItems(object[] items, bool exactly) {
+  private void _scrollToItems(object[] items, bool exactly) {
     var root = (ITreeItem)items[0];
     var idxItem = ((ITreeItem)items[^1]).GetIndex(root);
 
-    if (idxItem < 0 || !GetDiff(idxItem, root, out var diff) || diff == 0) return;
+    if (idxItem < 0 || !_getDiff(idxItem, root, out var diff) || diff == 0) return;
 
     _isScrollingTo = true;
 
-    if (IsDiffInView(idxItem, root)) {
+    if (_isDiffInView(idxItem, root)) {
       if (!exactly) {
         _isScrollingTo = false;
         return;
@@ -109,13 +108,13 @@ public class TreeViewBase : TreeView {
     }
 
     _sv.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
-      if (!GetDiff(idxItem, root, out diff) || diff == 0) return;
+      if (!_getDiff(idxItem, root, out diff) || diff == 0) return;
 
-      // if diff wasn't it the view
+      // if diff was not in the view
       try {
-        var parent = ScrollIntoView(this, items);
+        var parent = _scrollIntoView(this, items);
         parent.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
-          if (!GetDiff(idxItem, root, out diff) || diff == 0) return;
+          if (!_getDiff(idxItem, root, out diff) || diff == 0) return;
           _sv.ScrollToVerticalOffset(_sv.VerticalOffset + diff);
           _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => {
             _isScrollingTo = false;
@@ -128,10 +127,10 @@ public class TreeViewBase : TreeView {
     });
   }
 
-  private bool GetDiff(int idxItem, ITreeItem root, out int diff) {
+  private bool _getDiff(int idxItem, ITreeItem root, out int diff) {
     diff = 0;
     var flag = false;
-    var idxTopItem = GetHitTestItem(10, 10)?.GetIndex(root);
+    var idxTopItem = _getHitTestItem(10, 10)?.GetIndex(root);
 
     if (idxTopItem is not (null or < 0)) {
       diff = idxItem - (int)idxTopItem;
@@ -142,16 +141,16 @@ public class TreeViewBase : TreeView {
     return flag;
   }
 
-  private bool IsDiffInView(int idxItem, ITreeItem root) {
+  private bool _isDiffInView(int idxItem, ITreeItem root) {
     var bottomY = _sv.ActualHeight - 10;
     if (_sv.ComputedHorizontalScrollBarVisibility == Visibility.Visible) bottomY -= 14;
-    var idxTopItem = GetHitTestItem(10, 10)?.GetIndex(root);
-    var idxBottomItem = GetHitTestItem(10, bottomY)?.GetIndex(root);
+    var idxTopItem = _getHitTestItem(10, 10)?.GetIndex(root);
+    var idxBottomItem = _getHitTestItem(10, bottomY)?.GetIndex(root);
     return idxTopItem is not (null or < 0) && idxBottomItem is not (null or < 0) &&
            idxTopItem <= idxItem && idxItem <= idxBottomItem;
   }
 
-  private static ItemsControl ScrollIntoView(ItemsControl parent, IEnumerable<object> items) {
+  private static ItemsControl _scrollIntoView(ItemsControl parent, IEnumerable<object> items) {
     foreach (var item in items) {
       var index = parent.Items.IndexOf(item);
       if (index < 0) break;
@@ -166,7 +165,7 @@ public class TreeViewBase : TreeView {
     return parent;
   }
 
-  private ITreeItem? GetHitTestItem(double x, double y) {
+  private ITreeItem? _getHitTestItem(double x, double y) {
     ITreeItem? outItem = null;
     VisualTreeHelper.HitTest(_sv, null, e => {
       if (e.VisualHit is not FrameworkElement { DataContext: ITreeItem item })
@@ -184,16 +183,13 @@ public class TreeViewBase : TreeView {
   /// TreeView loads all items when everything is expanded.
   /// So I collapsed the root on reload and expanded it after to load just what is in the view.
   /// </summary>
-  private void ExpandRootWhenReady(ITreeItem root) {
-    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => {
-      root.IsExpanded = true;
-    });
-  }
+  private void _expandRootWhenReady(ITreeItem root) =>
+    _sv.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, void () => root.IsExpanded = true);
 
   /// <summary>
   /// Scroll TreeView when the mouse is near the top or bottom
   /// </summary>
-  public void DragDropAutoScroll(DragEventArgs e) {
+  private protected void _dragDropAutoScroll(DragEventArgs e) {
     const int px = 25;
     var unit = GetValue(VirtualizingPanel.ScrollUnitProperty) is ScrollUnit.Item ? 1 : px;
     var pos = e.GetPosition(this);
