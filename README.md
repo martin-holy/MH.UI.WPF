@@ -4,6 +4,8 @@
 
 This library serves as a bridge between `MH.UI` and WPF, enabling easy integration and offering a suite of tools for developing rich, responsive WPF applications. It includes advanced UI components like custom sliders, virtualized panels, enhanced media players, and more, all specifically tailored for WPF.
 
+![](./screenshot.png)
+
 ## Features
 
 - **Custom Controls**: A wide range of WPF controls, including advanced sliders, media players, tree views, and more.
