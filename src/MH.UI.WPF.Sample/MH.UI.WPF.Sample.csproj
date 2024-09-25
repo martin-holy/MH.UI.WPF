@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\MH.UI\MH.UI.csproj" />
-    <ProjectReference Include="..\..\..\Common\MH.Utils\MH.Utils.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\MH.Utils\src\MH.Utils\MH.Utils.csproj" />
     <ProjectReference Include="..\MH.UI.WPF\MH.UI.WPF.csproj" />
   </ItemGroup>
 
