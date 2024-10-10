@@ -4,10 +4,9 @@ using System.Windows.Data;
 
 namespace MH.UI.WPF.Converters;
 
-public enum CheckFor { NotNull, Null, True, False, NotEmpty, NullOrEmpty, MoreThan0, All, EqualsParam, NotEqualsParam }
+public enum CheckFor { NotNull, Null, True, False, NotEmpty, NullOrEmpty, MoreThan0, EqualsParam, NotEqualsParam }
 
 public class VisibilityConverter : BaseConverter {
-  private static VisibilityConverter? _allToVisible;
   private static VisibilityConverter? _nullToVisible;
   private static VisibilityConverter? _notNullToVisible;
   private static VisibilityConverter? _trueToVisible;
@@ -19,7 +18,6 @@ public class VisibilityConverter : BaseConverter {
   private static VisibilityConverter? _equalsParamToVisible;
   private static VisibilityConverter? _notEqualsParamToVisible;
 
-  public static VisibilityConverter AllToVisible => _allToVisible ??= new() { CheckFor = CheckFor.All, ToVisible = true };
   public static VisibilityConverter NullToVisible => _nullToVisible ??= new() { CheckFor = CheckFor.Null, ToVisible = true };
   public static VisibilityConverter NotNullToVisible => _notNullToVisible ??= new() { CheckFor = CheckFor.NotNull, ToVisible = true };
   public static VisibilityConverter TrueToVisible => _trueToVisible ??= new() { CheckFor = CheckFor.True, ToVisible = true };
@@ -46,7 +44,6 @@ public class VisibilityConverter : BaseConverter {
       CheckFor.NotEmpty => GetFor((value is string s && !string.IsNullOrEmpty(s)) || (value is IList { Count: > 0 })),
       CheckFor.NullOrEmpty => GetFor(value is null || string.IsNullOrEmpty(value as string) || value is IList { Count: 0 }),
       CheckFor.MoreThan0 => GetFor(value is > 0),
-      CheckFor.All => GetFor(AllToBoolConverter.AllToBool(value, parameter)),
       CheckFor.EqualsParam => GetFor(Equals(value, parameter)),
       CheckFor.NotEqualsParam => GetFor(!Equals(value, parameter)),
       _ => Binding.DoNothing
