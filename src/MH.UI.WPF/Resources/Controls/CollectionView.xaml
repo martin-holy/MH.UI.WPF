@@ -68,6 +68,7 @@
             </MenuItem.Icon>
 
             <MenuItem Command="{Binding View.OpenGroupByDialogCommand}" CommandParameter="{Binding}"/>
+            <MenuItem Command="{Binding View.ShuffleCommand}" CommandParameter="{Binding}"/>
             <MenuItem Command="{Binding View.SortCommand}" CommandParameter="{Binding}"/>
 
             <MenuItem x:Name="miView" Header="View" ItemsSource="{Binding View.ViewModesCommands}">
