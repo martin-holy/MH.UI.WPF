@@ -123,7 +123,7 @@
               <b:Interaction.Triggers>
                 <b:EventTrigger EventName="MouseLeftButtonUp">
                   <b:InvokeCommandAction
-                    Command="{Binding TreeView.TreeItemSelectedCommand, RelativeSource=
+                    Command="{Binding TreeView.SelectItemCommand, RelativeSource=
                              {RelativeSource AncestorType=c:TreeViewBase}}"
                     CommandParameter="{Binding}"/>
                 </b:EventTrigger>
