@@ -13,6 +13,6 @@ public class RightContentVM : ObservableObject {
   public SlidePanelPinButton SlidePanelPinButton { get; } = new();
 
   public RightContentVM() {
-    FolderTreeView.TreeItemSelectedEvent += (_, e) => SelectedFolder = e.Data;
+    FolderTreeView.ItemSelectedEvent += (_, e) => SelectedFolder = e.Data;
   }
 }
