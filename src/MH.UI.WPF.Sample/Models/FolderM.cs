@@ -14,7 +14,7 @@ public class FolderM : TreeItem {
     Parent = parent;
   }
 
-  protected override void OnIsExpandedChanged(bool value) {
+  protected override void _onIsExpandedChanged(bool value) {
     if (value) LoadSubFolders();
     UpdateIcon();
   }
