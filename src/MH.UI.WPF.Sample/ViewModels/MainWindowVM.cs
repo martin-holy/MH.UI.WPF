@@ -98,7 +98,7 @@ public class MainWindowVM : ObservableObject {
   }
 
   private void AttachEvents() {
-    LeftContent.TabActivatedEvent += _ => {
+    LeftContent.TabActivatedEvent += (_, _) => {
       SlidePanelsGrid.PanelLeft!.IsOpen = true;
     };
 
