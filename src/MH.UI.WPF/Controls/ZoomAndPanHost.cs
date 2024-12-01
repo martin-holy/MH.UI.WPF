@@ -1,4 +1,6 @@
 ﻿using MH.UI.Controls;
+using MH.UI.WPF.Extensions;
+using MH.Utils.Types;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,12 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
 
   double IZoomAndPanHost.Width => ActualWidth;
   double IZoomAndPanHost.Height => ActualHeight;
+
+  public event EventHandler? HostSizeChangedEvent;
+  public event EventHandler<PointD>? HostMouseMoveEvent;
+  public event EventHandler<(PointD, PointD)>? HostMouseDownEvent;
+  public event EventHandler? HostMouseUpEvent;
+  public event EventHandler<(int, PointD)>? HostMouseWheelEvent;
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
@@ -51,18 +59,15 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
     _contentTransform.BeginAnimation(TranslateTransform.XProperty, null);
 
   private void _onCanvasSizeChanged(object sender, SizeChangedEventArgs e) =>
-    ZoomAndPan.OnHostSizeChanged();
+    HostSizeChangedEvent?.Invoke(this, EventArgs.Empty);
 
   private void _onCanvasMouseMove(object sender, MouseEventArgs e) {
     if (!_content.IsMouseCaptured) return;
-    var hostPos = e.GetPosition(_canvas);
-    ZoomAndPan.OnHostMouseMove(hostPos.X, hostPos.Y);
+    HostMouseMoveEvent?.Invoke(this, e.GetPosition(_canvas).ToPointD());
   }
 
   private void _onContentMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-    var hostPos = e.GetPosition(_canvas);
-    var contentPos = e.GetPosition(_content);
-    ZoomAndPan.OnContentMouseDown(hostPos.X, hostPos.Y, contentPos.X, contentPos.Y);
+    HostMouseDownEvent?.Invoke(this, new(e.GetPosition(_canvas).ToPointD(), e.GetPosition(_content).ToPointD()));
     _canvas.Cursor = Cursors.Hand;
     _content.CaptureMouse();
   }
@@ -70,13 +75,11 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
   private void _onContentMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
     _canvas.Cursor = Cursors.Arrow;
     _content.ReleaseMouseCapture();
-    ZoomAndPan.OnContentMouseUp();
+    HostMouseUpEvent?.Invoke(this, EventArgs.Empty);
   }
 
-  private void _onContentMouseWheel(object sender, MouseWheelEventArgs e) {
-    var contentPos = e.GetPosition(_content);
-    ZoomAndPan.OnContentMouseWheel(e.Delta, contentPos.X, contentPos.Y);
-  }
+  private void _onContentMouseWheel(object sender, MouseWheelEventArgs e) =>
+    HostMouseWheelEvent?.Invoke(this, (e.Delta, e.GetPosition(_content).ToPointD()));
 
   private static void _onZoomAndPanChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
     if (d is not ZoomAndPanHost host) return;
