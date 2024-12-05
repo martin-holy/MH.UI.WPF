@@ -6,11 +6,11 @@ namespace MH.UI.WPF.Sample.ViewModels;
 
 public sealed class SampleProgressDialog: ProgressDialog<string> {
   public SampleProgressDialog(string[] items) : base("Sample Progress Dialog", Res.IconImage, items) {
-    AutoRun();
+    _autoRun();
   }
 
-  protected override Task Do(string item, CancellationToken token) {
-    ReportProgress(item);
+  protected override Task _do(string item, CancellationToken token) {
+    _reportProgress(item);
     return Task.Delay(1000, token);
   }
 }
