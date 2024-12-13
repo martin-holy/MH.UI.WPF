@@ -96,11 +96,11 @@ public class RangeSlider : Control {
     else Range.End = Math.Max(Range.Start, value);
 
     ArrangeOverride(RenderSize);
-    Range.RaiseChangedEvent();
+    Range.RaiseChanged();
   }
 
   private static void OnDragCompletedEvent(object sender, DragCompletedEventArgs e) =>
-    (sender as RangeSlider)?.Range?.RaiseChangedEvent();
+    (sender as RangeSlider)?.Range?.RaiseChanged();
 
   private static void OnThumbDragDelta(object sender, DragDeltaEventArgs e) =>
     (sender as RangeSlider)?.OnThumbDragDelta(e);
