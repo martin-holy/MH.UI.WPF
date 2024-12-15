@@ -17,7 +17,7 @@ public class SlidePanelHost : Control {
   private readonly Storyboard _sbClose = new();
 
   public static readonly DependencyProperty SlidePanelProperty = DependencyProperty.Register(
-    nameof(SlidePanel), typeof(SlidePanel), typeof(SlidePanelHost), new(OnSlidePanelPropertyChanged));
+    nameof(SlidePanel), typeof(SlidePanel), typeof(SlidePanelHost), new(_onSlidePanelPropertyChanged));
 
   public SlidePanel SlidePanel {
     get => (SlidePanel)GetValue(SlidePanelProperty);
@@ -32,13 +32,13 @@ public class SlidePanelHost : Control {
     _sbClose.Children.Add(_closeAnimation);
   }
 
-  private static void OnSlidePanelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+  private static void _onSlidePanelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
     if (d is not SlidePanelHost self) return;
-    if (e.OldValue is ObservableObject oldO) oldO.PropertyChanged -= self.OnAnySlidePanelPropertyChanged;
-    if (e.NewValue is ObservableObject newO) newO.PropertyChanged += self.OnAnySlidePanelPropertyChanged;
+    if (e.OldValue is ObservableObject oldO) oldO.PropertyChanged -= self._onAnySlidePanelPropertyChanged;
+    if (e.NewValue is ObservableObject newO) newO.PropertyChanged += self._onAnySlidePanelPropertyChanged;
   }
 
-  private void OnAnySlidePanelPropertyChanged(object? sender, PropertyChangedEventArgs e) {
+  private void _onAnySlidePanelPropertyChanged(object? sender, PropertyChangedEventArgs e) {
     if (!e.Is(nameof(SlidePanel.IsOpen))) return;
     if (SlidePanel.IsOpen)
       _sbOpen.Begin(this);
