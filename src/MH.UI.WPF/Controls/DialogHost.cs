@@ -12,7 +12,7 @@ public class DialogHost : ObservableObject {
   public DataTemplateSelector? DialogTemplateSelector { get; }
 
   private DialogHost(Dialog content) {
-    var owner = GeoOwner();
+    var owner = _geoOwner();
 
     Content = content;
     
@@ -41,7 +41,7 @@ public class DialogHost : ObservableObject {
     return content.Result;
   }
 
-  private static Window GeoOwner() =>
+  private static Window _geoOwner() =>
     Application.Current.Windows[^1]?.Content is DialogHost dh
       ? dh.Window
       : Application.Current.MainWindow!;
