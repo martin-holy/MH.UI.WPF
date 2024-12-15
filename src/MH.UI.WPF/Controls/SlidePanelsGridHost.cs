@@ -16,14 +16,14 @@ public class SlidePanelsGridHost : Control {
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
-    MouseMove += OnMouseMove;
-    InitPanel(GetTemplateChild("PART_LeftPanel") as SlidePanelHost);
-    InitPanel(GetTemplateChild("PART_TopPanel") as SlidePanelHost);
-    InitPanel(GetTemplateChild("PART_RightPanel") as SlidePanelHost);
-    InitPanel(GetTemplateChild("PART_BottomPanel") as SlidePanelHost);
+    MouseMove += _onMouseMove;
+    _initPanel(GetTemplateChild("PART_LeftPanel") as SlidePanelHost);
+    _initPanel(GetTemplateChild("PART_TopPanel") as SlidePanelHost);
+    _initPanel(GetTemplateChild("PART_RightPanel") as SlidePanelHost);
+    _initPanel(GetTemplateChild("PART_BottomPanel") as SlidePanelHost);
   }
 
-  private void InitPanel(SlidePanelHost? host) {
+  private void _initPanel(SlidePanelHost? host) {
     if (host == null) return;
     host.SizeChanged += (_, e) => {
       SlidePanelsGrid.SetPin(host.SlidePanel);
@@ -31,7 +31,7 @@ public class SlidePanelsGridHost : Control {
     };
   }
 
-  private void OnMouseMove(object sender, MouseEventArgs e) {
+  private void _onMouseMove(object sender, MouseEventArgs e) {
     var pos = e.GetPosition(this);
     SlidePanelsGrid.OnMouseMove(pos.X, pos.Y, ActualWidth, ActualHeight);
   }
