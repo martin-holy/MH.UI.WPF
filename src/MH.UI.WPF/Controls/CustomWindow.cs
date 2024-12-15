@@ -17,10 +17,10 @@ public class CustomWindow : Window {
 
   public static readonly DependencyProperty IsFullScreenProperty = DependencyProperty.Register(
     nameof(IsFullScreen), typeof(bool), typeof(CustomWindow),
-    new((o, _) => (o as CustomWindow)?.OnIsFullScreenChanged()));
+    new((o, _) => (o as CustomWindow)?._onIsFullScreenChanged()));
 
   public static readonly DependencyProperty IsDragAreaForProperty = DependencyProperty.RegisterAttached(
-    "IsDragAreaFor", typeof(Window), typeof(CustomWindow), new(OnIsDragAreaChanged));
+    "IsDragAreaFor", typeof(Window), typeof(CustomWindow), new(_onIsDragAreaChanged));
 
   public bool CanResize { get => (bool)GetValue(CanResizeProperty); set => SetValue(CanResizeProperty, value); }
   public bool CanFullScreen { get => (bool)GetValue(CanFullScreenProperty); set => SetValue(CanFullScreenProperty, value); }
@@ -67,7 +67,7 @@ public class CustomWindow : Window {
     x => x!.IsFullScreen = !x.IsFullScreen, x => x != null);
 
   public CustomWindow() {
-    StateChanged += delegate { OnStateChanged(); };
+    StateChanged += delegate { _onStateChanged(); };
     Loaded += delegate {
       if (WindowState != WindowState.Maximized) return;
       var isFullScreen = IsFullScreen;
@@ -80,12 +80,12 @@ public class CustomWindow : Window {
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
     if (GetTemplateChild("PART_ResizeBorder") is not Border border) return;
-    border.MouseEnter += delegate { SetCursor(); };
-    border.MouseLeave += delegate { ResetCursor(); };
-    border.PreviewMouseLeftButtonDown += delegate { Resize(); };
+    border.MouseEnter += delegate { _setCursor(); };
+    border.MouseLeave += delegate { _resetCursor(); };
+    border.PreviewMouseLeftButtonDown += delegate { _resize(); };
   }
 
-  private void OnStateChanged() {
+  private void _onStateChanged() {
     if (WindowState == WindowState.Normal && IsFullScreen)
       IsFullScreen = false;
 
@@ -93,7 +93,7 @@ public class CustomWindow : Window {
       MaxHeight = SystemParameters.WorkArea.Height;
   }
 
-  private void OnIsFullScreenChanged() {
+  private void _onIsFullScreenChanged() {
     MaxHeight = IsFullScreen
       ? double.PositiveInfinity
       : SystemParameters.WorkArea.Height;
@@ -102,27 +102,27 @@ public class CustomWindow : Window {
       WindowState = WindowState.Maximized;
   }
 
-  private static void OnIsDragAreaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+  private static void _onIsDragAreaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
     if (d is FrameworkElement fe && e.NewValue is Window window)
       fe.PreviewMouseLeftButtonDown += delegate { window.DragMove(); };
   }
 
-  private void SetCursor() =>
-    Cursor = ResizeDirectionToCursor(GetResizeDirection());
+  private void _setCursor() =>
+    Cursor = _resizeDirectionToCursor(_getResizeDirection());
 
-  private void ResetCursor() {
+  private void _resetCursor() {
     if (Mouse.LeftButton != MouseButtonState.Pressed)
       Cursor = Cursors.Arrow;
   }
 
-  private void Resize() {
+  private void _resize() {
     if (PresentationSource.FromVisual(this) is not HwndSource hwndSource) return;
-    var direction = GetResizeDirection();
-    Cursor = ResizeDirectionToCursor(direction);
+    var direction = _getResizeDirection();
+    Cursor = _resizeDirectionToCursor(direction);
     SendMessage(hwndSource.Handle, _wmSysCommand, (IntPtr)direction, IntPtr.Zero);
   }
 
-  private ResizeDirection GetResizeDirection() {
+  private ResizeDirection _getResizeDirection() {
     var pos = Mouse.GetPosition(this);
 
     if (pos.X > _resizeCornerSize && pos.X < ActualWidth - _resizeCornerSize) {
@@ -145,7 +145,7 @@ public class CustomWindow : Window {
     return ResizeDirection.None;
   }
 
-  private static Cursor ResizeDirectionToCursor(ResizeDirection direction) =>
+  private static Cursor _resizeDirectionToCursor(ResizeDirection direction) =>
     direction switch {
       ResizeDirection.Left => Cursors.SizeWE,
       ResizeDirection.Right => Cursors.SizeWE,
