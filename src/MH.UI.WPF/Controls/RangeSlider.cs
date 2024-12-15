@@ -19,7 +19,7 @@ public class RangeSlider : Control {
 
   public static readonly DependencyProperty RangeProperty = DependencyProperty.Register(
     nameof(Range), typeof(SelectionRange), typeof(RangeSlider),
-    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure, OnRangePropertyChanged));
+    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.AffectsMeasure, _onRangePropertyChanged));
   public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
     nameof(Orientation), typeof(Orientation), typeof(RangeSlider), new(Orientation.Horizontal));
   public static readonly DependencyProperty TickFrequencyProperty = DependencyProperty.Register(
@@ -30,15 +30,15 @@ public class RangeSlider : Control {
   public double TickFrequency { get => (double)GetValue(TickFrequencyProperty); set => SetValue(TickFrequencyProperty, value); }
 
   static RangeSlider() {
-    EventManager.RegisterClassHandler(typeof(RangeSlider), Thumb.DragDeltaEvent, new DragDeltaEventHandler(OnThumbDragDelta));
-    EventManager.RegisterClassHandler(typeof(RangeSlider), Thumb.DragCompletedEvent, new DragCompletedEventHandler(OnDragCompletedEvent));
+    EventManager.RegisterClassHandler(typeof(RangeSlider), Thumb.DragDeltaEvent, new DragDeltaEventHandler(_onThumbDragDelta));
+    EventManager.RegisterClassHandler(typeof(RangeSlider), Thumb.DragCompletedEvent, new DragCompletedEventHandler(_onDragCompletedEvent));
   }
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
 
     _sliderContainer = GetTemplateChild("PART_SliderContainer") as FrameworkElement;
-    if (_sliderContainer != null) _sliderContainer.PreviewMouseDown += OnSliderPreviewMouseDown;
+    if (_sliderContainer != null) _sliderContainer.PreviewMouseDown += _onSliderPreviewMouseDown;
     _startArea = GetTemplateChild("PART_StartArea") as FrameworkElement;
     _selectedArea = GetTemplateChild("PART_SelectedArea") as FrameworkElement;
     _endArea = GetTemplateChild("PART_EndArea") as FrameworkElement;
@@ -75,20 +75,20 @@ public class RangeSlider : Control {
     return arrangeSize;
   }
 
-  private void OnSliderPreviewMouseDown(object sender, MouseButtonEventArgs e) {
+  private void _onSliderPreviewMouseDown(object sender, MouseButtonEventArgs e) {
     if (Range == null || _startThumb?.IsMouseOver == true || _endThumb?.IsMouseOver == true) return;
 
     var point = e.GetPosition(_sliderContainer);
     if (e.ChangedButton == MouseButton.Left)
-      MoveThumbTo(point.X, true);
+      _moveThumbTo(point.X, true);
     else if (e.ChangedButton == MouseButton.Right)
-      MoveThumbTo(point.X, false);
+      _moveThumbTo(point.X, false);
 
     e.Handled = true;
   }
 
-  private void MoveThumbTo(double position, bool start) {
-    double size = _sliderContainer?.ActualWidth ?? double.NaN;
+  private void _moveThumbTo(double position, bool start) {
+    var size = _sliderContainer?.ActualWidth ?? double.NaN;
     if (double.IsNaN(size) || !(size > 0)) return;
     var value = Math.Min(Range!.Max, Range.Min + (position / size) * (Range.Max - Range.Min)).RoundTo(TickFrequency);
         
@@ -99,15 +99,15 @@ public class RangeSlider : Control {
     Range.RaiseChanged();
   }
 
-  private static void OnDragCompletedEvent(object sender, DragCompletedEventArgs e) =>
+  private static void _onDragCompletedEvent(object sender, DragCompletedEventArgs e) =>
     (sender as RangeSlider)?.Range?.RaiseChanged();
 
-  private static void OnThumbDragDelta(object sender, DragDeltaEventArgs e) =>
-    (sender as RangeSlider)?.OnThumbDragDelta(e);
+  private static void _onThumbDragDelta(object sender, DragDeltaEventArgs e) =>
+    (sender as RangeSlider)?._onThumbDragDelta(e);
 
-  private void OnThumbDragDelta(DragDeltaEventArgs e) {
+  private void _onThumbDragDelta(DragDeltaEventArgs e) {
     if (Range == null || e.OriginalSource is not Thumb thumb || _sliderContainer == null) return;
-    double change = e.HorizontalChange / _sliderContainer.ActualWidth * (Range.Max - Range.Min);
+    var change = e.HorizontalChange / _sliderContainer.ActualWidth * (Range.Max - Range.Min);
 
     if (ReferenceEquals(thumb, _startThumb))
       Range.Start = Math.Max(Range.Min, Math.Min(Range.End, Range.Start + change)).RoundTo(TickFrequency);
@@ -117,12 +117,12 @@ public class RangeSlider : Control {
     ArrangeOverride(RenderSize);
   }
   
-  private static void OnRangePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+  private static void _onRangePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
     if (d is not RangeSlider self) return;
-    if (e.OldValue is SelectionRange oldRange) oldRange.PropertyChanged -= self.OnAnyRangePropertyChanged;
-    if (e.NewValue is SelectionRange newRange) newRange.PropertyChanged += self.OnAnyRangePropertyChanged;
+    if (e.OldValue is SelectionRange oldRange) oldRange.PropertyChanged -= self._onAnyRangePropertyChanged;
+    if (e.NewValue is SelectionRange newRange) newRange.PropertyChanged += self._onAnyRangePropertyChanged;
   }
 
-  private void OnAnyRangePropertyChanged(object? sender, PropertyChangedEventArgs e) =>
+  private void _onAnyRangePropertyChanged(object? sender, PropertyChangedEventArgs e) =>
     ArrangeOverride(RenderSize);
 }
