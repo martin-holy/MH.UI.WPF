@@ -9,12 +9,12 @@ public class PopupSlider : Slider {
   public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
     nameof(Content), typeof(Button), typeof(PopupSlider));
 
-  public Button Content {
-    get => (Button)GetValue(ContentProperty);
+  public Button? Content {
+    get => (Button?)GetValue(ContentProperty);
     set => SetValue(ContentProperty, value);
   }
 
-  public event EventHandler PopupClosedEvent = delegate { };
+  public event EventHandler? PopupClosedEvent;
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
@@ -25,12 +25,12 @@ public class PopupSlider : Slider {
 
     popup.PreviewMouseUp += delegate {
       popup.IsOpen = false;
-      PopupClosedEvent(this, EventArgs.Empty);
+      PopupClosedEvent?.Invoke(this, EventArgs.Empty);
     };
 
     popup.CustomPopupPlacementCallback += (size, targetSize, _) => {
       var x = targetSize.Width / 2 - size.Width / 2;
-      return new[] { new CustomPopupPlacement(new(x, targetSize.Height), PopupPrimaryAxis.Vertical) };
+      return [new(new(x, targetSize.Height), PopupPrimaryAxis.Vertical)];
     };
   }
 }
