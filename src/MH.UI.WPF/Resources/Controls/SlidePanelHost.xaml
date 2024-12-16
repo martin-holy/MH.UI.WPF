@@ -9,7 +9,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="c:SlidePanelHost">
-          <ContentPresenter Content="{Binding SlidePanel.Content, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+          <ContentPresenter Content="{Binding ViewModel.Content, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -22,7 +22,7 @@
       Width="20"
       Height="20"
       IsThreeState="False"
-      IsChecked="{Binding SlidePanel.IsPinned, RelativeSource={RelativeSource AncestorType=c:SlidePanelHost}, FallbackValue=False}"
+      IsChecked="{Binding ViewModel.IsPinned, RelativeSource={RelativeSource AncestorType=c:SlidePanelHost}, FallbackValue=False}"
       ToolTip="Pin panel"/>
   </DataTemplate>
 </ResourceDictionary>

@@ -36,7 +36,7 @@ public class SlidePanelsGridHost : Control, ISlidePanelsGridHost {
   private void _initPanel(SlidePanelHost? host) {
     if (host == null) return;
     host.SizeChanged += (_, e) => {
-      ViewModel?.SetPin(host.SlidePanel);
+      if (host.ViewModel != null) ViewModel?.SetPin(host.ViewModel);
       host.UpdateAnimation(e);
     };
   }

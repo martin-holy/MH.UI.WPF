@@ -36,33 +36,33 @@
                 Grid.Row="1"
                 HorizontalAlignment="Left"
                 Width="{Binding PanelLeft.Size, Mode=OneWay}"
-                SlidePanel="{Binding PanelLeft}"/>
+                ViewModel="{Binding PanelLeft}"/>
 
               <c:SlidePanelHost
                 x:Name="PART_RightPanel"
                 Grid.Row="1"
                 HorizontalAlignment="Right"
                 Width="{Binding PanelRight.Size, Mode=OneWay}"
-                SlidePanel="{Binding PanelRight}"/>
+                ViewModel="{Binding PanelRight}"/>
             </Grid>
 
             <c:SlidePanelHost
               x:Name="PART_TopPanel"
               VerticalAlignment="Top"
               Height="{Binding PanelTop.Size, Mode=OneWay}"
-              SlidePanel="{Binding PanelTop}"/>
+              ViewModel="{Binding PanelTop}"/>
 
             <c:SlidePanelHost
               x:Name="PART_BottomPanel"
               VerticalAlignment="Bottom"
-              SlidePanel="{Binding PanelBottom}"/>
+              ViewModel="{Binding PanelBottom}"/>
           </Grid>
 
           <ControlTemplate.Triggers>
             <DataTrigger Value="True">
               <DataTrigger.Binding>
                 <MultiBinding Converter="{x:Static conv:SetPropertyConverter.Inst}" ConverterParameter="Size">
-                  <Binding Path="SlidePanel" ElementName="PART_BottomPanel"/>
+                  <Binding Path="ViewModel" ElementName="PART_BottomPanel"/>
                   <Binding Path="ActualHeight" ElementName="PART_BottomPanel"/>
                 </MultiBinding>
               </DataTrigger.Binding>

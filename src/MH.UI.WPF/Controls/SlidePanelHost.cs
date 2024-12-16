@@ -1,8 +1,5 @@
 ﻿using MH.UI.Controls;
-using MH.Utils.BaseClasses;
-using MH.Utils.Extensions;
 using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -10,18 +7,23 @@ using Dock = MH.UI.Controls.Dock;
 
 namespace MH.UI.WPF.Controls;
 
-public class SlidePanelHost : Control {
+public class SlidePanelHost : Control, ISlidePanelHost {
   private readonly ThicknessAnimation _openAnimation = new();
   private readonly ThicknessAnimation _closeAnimation = new();
   private readonly Storyboard _sbOpen = new();
   private readonly Storyboard _sbClose = new();
 
-  public static readonly DependencyProperty SlidePanelProperty = DependencyProperty.Register(
-    nameof(SlidePanel), typeof(SlidePanel), typeof(SlidePanelHost), new(_onSlidePanelPropertyChanged));
+  public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+    nameof(ViewModel), typeof(SlidePanel), typeof(SlidePanelHost), new(_onViewModelChanged));
 
-  public SlidePanel SlidePanel {
-    get => (SlidePanel)GetValue(SlidePanelProperty);
-    set => SetValue(SlidePanelProperty, value);
+  public SlidePanel? ViewModel {
+    get => (SlidePanel?)GetValue(ViewModelProperty);
+    set => SetValue(ViewModelProperty, value);
+  }
+
+  private static void _onViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    if (d is not SlidePanelHost host || host.ViewModel == null) return;
+    host.ViewModel.Host = host;
   }
 
   public override void OnApplyTemplate() {
@@ -32,33 +34,24 @@ public class SlidePanelHost : Control {
     _sbClose.Children.Add(_closeAnimation);
   }
 
-  private static void _onSlidePanelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    if (d is not SlidePanelHost self) return;
-    if (e.OldValue is ObservableObject oldO) oldO.PropertyChanged -= self._onAnySlidePanelPropertyChanged;
-    if (e.NewValue is ObservableObject newO) newO.PropertyChanged += self._onAnySlidePanelPropertyChanged;
-  }
+  public void OpenAnimation() => _sbOpen.Begin(this);
 
-  private void _onAnySlidePanelPropertyChanged(object? sender, PropertyChangedEventArgs e) {
-    if (!e.Is(nameof(SlidePanel.IsOpen))) return;
-    if (SlidePanel.IsOpen)
-      _sbOpen.Begin(this);
-    else
-      _sbClose.Begin(this);
-  }
+  public void CloseAnimation() => _sbClose.Begin(this);
 
   public void UpdateAnimation(SizeChangedEventArgs e) {
-    if ((SlidePanel.Dock is Dock.Top or Dock.Bottom && !e.HeightChanged) ||
-        (SlidePanel.Dock is Dock.Left or Dock.Right && !e.WidthChanged))
+    if (ViewModel == null ||
+        (ViewModel.Dock is Dock.Top or Dock.Bottom && !e.HeightChanged) ||
+        (ViewModel.Dock is Dock.Left or Dock.Right && !e.WidthChanged))
       return;
 
-    var size = SlidePanel.Size * -1;
+    var size = ViewModel.Size * -1;
     var duration = new Duration(TimeSpan.FromMilliseconds(size * -1 * 0.7));
     var openFrom = new Thickness(0);
     var openTo = new Thickness(0);
     var closeFrom = new Thickness(0);
     var closeTo = new Thickness(0);
 
-    switch (SlidePanel.Dock) {
+    switch (ViewModel.Dock) {
       case Dock.Left: openFrom.Left = size; closeTo.Left = size; break;
       case Dock.Top: openFrom.Top = size; closeTo.Top = size; break;
       case Dock.Right: openFrom.Right = size; closeTo.Right = size; break;
@@ -73,6 +66,6 @@ public class SlidePanelHost : Control {
     _closeAnimation.From = closeFrom;
     _closeAnimation.To = closeTo;
 
-    if (!SlidePanel.IsOpen) _sbClose.Begin(this);
+    if (!ViewModel.IsOpen) _sbClose.Begin(this);
   }
 }
