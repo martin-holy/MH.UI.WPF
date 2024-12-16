@@ -14,5 +14,5 @@
   Width="820"
   WindowStartupLocation="CenterScreen">
 
-  <mhc:SlidePanelsGridHost SlidePanelsGrid="{Binding SlidePanelsGrid}"/>
+  <mhc:SlidePanelsGridHost ViewModel="{Binding SlidePanelsGrid}"/>
 </mhc:CustomWindow>

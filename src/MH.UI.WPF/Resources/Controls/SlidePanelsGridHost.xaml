@@ -9,7 +9,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="c:SlidePanelsGridHost">
-          <Grid Background="Transparent" ClipToBounds="True" DataContext="{Binding SlidePanelsGrid, RelativeSource={RelativeSource TemplatedParent}}">
+          <Grid Background="Transparent" ClipToBounds="True" DataContext="{Binding ViewModel, RelativeSource={RelativeSource TemplatedParent}}">
             <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition Height="{Binding PanelTopGridHeight, Mode=TwoWay, Converter={x:Static conv:GridLengthConverter.Inst}}"/>

@@ -1,18 +1,28 @@
 ﻿using MH.UI.Controls;
+using MH.UI.WPF.Extensions;
+using MH.Utils.Types;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MH.UI.WPF.Controls;
 
-public class SlidePanelsGridHost : Control {
-  public static readonly DependencyProperty SlidePanelsGridProperty = DependencyProperty.Register(
-    nameof(SlidePanelsGrid), typeof(SlidePanelsGrid), typeof(SlidePanelsGridHost));
+public class SlidePanelsGridHost : Control, ISlidePanelsGridHost {
+  public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+    nameof(ViewModel), typeof(SlidePanelsGrid), typeof(SlidePanelsGridHost), new(_viewModelChanged));
 
-  public SlidePanelsGrid SlidePanelsGrid {
-    get => (SlidePanelsGrid)GetValue(SlidePanelsGridProperty);
-    set => SetValue(SlidePanelsGridProperty, value);
+  public SlidePanelsGrid? ViewModel {
+    get => (SlidePanelsGrid?)GetValue(ViewModelProperty);
+    set => SetValue(ViewModelProperty, value);
   }
+
+  private static void _viewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    if (d is not SlidePanelsGridHost host || host.ViewModel == null) return;
+    host.ViewModel.Host = host;
+  }
+
+  public event EventHandler<(PointD Position, double Width, double Height)>? HostMouseMoveEvent;
 
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
@@ -26,13 +36,11 @@ public class SlidePanelsGridHost : Control {
   private void _initPanel(SlidePanelHost? host) {
     if (host == null) return;
     host.SizeChanged += (_, e) => {
-      SlidePanelsGrid.SetPin(host.SlidePanel);
+      ViewModel?.SetPin(host.SlidePanel);
       host.UpdateAnimation(e);
     };
   }
 
-  private void _onMouseMove(object sender, MouseEventArgs e) {
-    var pos = e.GetPosition(this);
-    SlidePanelsGrid.OnMouseMove(pos.X, pos.Y, ActualWidth, ActualHeight);
-  }
+  private void _onMouseMove(object sender, MouseEventArgs e) =>
+    HostMouseMoveEvent?.Invoke(this, new(e.GetPosition(this).ToPointD(), ActualWidth, ActualHeight));
 }
