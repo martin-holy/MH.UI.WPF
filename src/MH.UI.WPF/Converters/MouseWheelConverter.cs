@@ -11,14 +11,10 @@ public class MouseWheelConverter : BaseConverter {
   public override object? Convert(object? value, object? parameter) {
     if (value is not MouseWheelEventArgs e) return null;
 
-    return new MH.Utils.EventsArgs.MouseWheelEventArgs() {
-      IsSourceDesired = parameter?.Equals(e.OriginalSource.GetType().FullName) == true,
+    return new MH.Utils.EventsArgs.MouseWheelEventArgs {
       OriginalSource = e.OriginalSource,
       DataContext = (e.OriginalSource as FrameworkElement)?.DataContext,
-      Delta = e.Delta,
-      IsCtrlOn = (Keyboard.Modifiers & ModifierKeys.Control) > 0,
-      IsAltOn = (Keyboard.Modifiers & ModifierKeys.Alt) > 0,
-      IsShiftOn = (Keyboard.Modifiers & ModifierKeys.Shift) > 0
+      Delta = e.Delta
     };
   }
 }
