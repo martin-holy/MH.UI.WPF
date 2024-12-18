@@ -12,18 +12,18 @@
           <Grid Background="Transparent" ClipToBounds="True" DataContext="{Binding ViewModel, RelativeSource={RelativeSource TemplatedParent}}">
             <Grid>
               <Grid.RowDefinitions>
-                <RowDefinition Height="{Binding PanelTopGridHeight, Mode=TwoWay, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
+                <RowDefinition Height="{Binding PanelTop.GridSize, Mode=TwoWay, FallbackValue=0, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="{Binding PanelBottomGridHeight, Mode=TwoWay, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
+                <RowDefinition Height="{Binding PanelBottom.GridSize, Mode=TwoWay, FallbackValue=0, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
               </Grid.RowDefinitions>
 
               <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="{Binding PanelLeftGridWidth, Mode=TwoWay, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
+                  <ColumnDefinition Width="{Binding PanelLeft.GridSize, Mode=TwoWay, FallbackValue=0, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
                   <ColumnDefinition Width="3"/>
                   <ColumnDefinition Width="*"/>
                   <ColumnDefinition Width="3"/>
-                  <ColumnDefinition Width="{Binding PanelRightGridWidth, Mode=TwoWay, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
+                  <ColumnDefinition Width="{Binding PanelRight.GridSize, Mode=TwoWay, FallbackValue=0, Converter={x:Static conv:GridLengthConverter.Inst}}"/>
                 </Grid.ColumnDefinitions>
 
                 <GridSplitter Grid.Column="1" Visibility="{Binding PanelLeft.IsPinned, Converter={x:Static conv:VisibilityConverter.TrueToVisible}}"/>
@@ -32,14 +32,12 @@
               </Grid>
 
               <c:SlidePanelHost
-                x:Name="PART_LeftPanel"
                 Grid.Row="1"
                 HorizontalAlignment="Left"
                 Width="{Binding PanelLeft.Size, Mode=OneWay}"
                 ViewModel="{Binding PanelLeft}"/>
 
               <c:SlidePanelHost
-                x:Name="PART_RightPanel"
                 Grid.Row="1"
                 HorizontalAlignment="Right"
                 Width="{Binding PanelRight.Size, Mode=OneWay}"
@@ -47,7 +45,6 @@
             </Grid>
 
             <c:SlidePanelHost
-              x:Name="PART_TopPanel"
               VerticalAlignment="Top"
               Height="{Binding PanelTop.Size, Mode=OneWay}"
               ViewModel="{Binding PanelTop}"/>

@@ -1,9 +1,10 @@
 ﻿using MH.UI.Controls;
+using MH.UI.WPF.Extensions;
+using MH.Utils.Types;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using Dock = MH.UI.Controls.Dock;
 
 namespace MH.UI.WPF.Controls;
 
@@ -26,46 +27,33 @@ public class SlidePanelHost : Control, ISlidePanelHost {
     host.ViewModel.Host = host;
   }
 
+  public event EventHandler<MH.Utils.EventsArgs.SizeChangedEventArgs>? HostSizeChangedEvent;
+
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
     Storyboard.SetTargetProperty(_openAnimation, new(MarginProperty));
     Storyboard.SetTargetProperty(_closeAnimation, new(MarginProperty));
     _sbOpen.Children.Add(_openAnimation);
     _sbClose.Children.Add(_closeAnimation);
+    SizeChanged += _onSizeChanged;
   }
+
+  private void _onSizeChanged(object sender, SizeChangedEventArgs e) =>
+    HostSizeChangedEvent?.Invoke(this, new(e.PreviousSize.ToSizeD(), e.NewSize.ToSizeD(), e.WidthChanged, e.HeightChanged));
 
   public void OpenAnimation() => _sbOpen.Begin(this);
 
   public void CloseAnimation() => _sbClose.Begin(this);
 
-  public void UpdateAnimation(SizeChangedEventArgs e) {
-    if (ViewModel == null ||
-        (ViewModel.Dock is Dock.Top or Dock.Bottom && !e.HeightChanged) ||
-        (ViewModel.Dock is Dock.Left or Dock.Right && !e.WidthChanged))
-      return;
+  public void UpdateOpenAnimation(ThicknessD from, ThicknessD to, TimeSpan duration) {
+    _openAnimation.From = from.FromThicknessD();
+    _openAnimation.To = to.FromThicknessD();
+    _openAnimation.Duration = new(duration);
+  }
 
-    var size = ViewModel.Size * -1;
-    var duration = new Duration(TimeSpan.FromMilliseconds(size * -1 * 0.7));
-    var openFrom = new Thickness(0);
-    var openTo = new Thickness(0);
-    var closeFrom = new Thickness(0);
-    var closeTo = new Thickness(0);
-
-    switch (ViewModel.Dock) {
-      case Dock.Left: openFrom.Left = size; closeTo.Left = size; break;
-      case Dock.Top: openFrom.Top = size; closeTo.Top = size; break;
-      case Dock.Right: openFrom.Right = size; closeTo.Right = size; break;
-      case Dock.Bottom: openFrom.Bottom = size; closeTo.Bottom = size; break;
-      default: throw new ArgumentOutOfRangeException();
-    }
-
-    _openAnimation.Duration = duration;
-    _openAnimation.From = openFrom;
-    _openAnimation.To = openTo;
-    _closeAnimation.Duration = duration;
-    _closeAnimation.From = closeFrom;
-    _closeAnimation.To = closeTo;
-
-    if (!ViewModel.IsOpen) _sbClose.Begin(this);
+  public void UpdateCloseAnimation(ThicknessD from, ThicknessD to, TimeSpan duration) {
+    _closeAnimation.From = from.FromThicknessD();
+    _closeAnimation.To = to.FromThicknessD();
+    _closeAnimation.Duration = new(duration);
   }
 }

@@ -27,18 +27,6 @@ public class SlidePanelsGridHost : Control, ISlidePanelsGridHost {
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
     MouseMove += _onMouseMove;
-    _initPanel(GetTemplateChild("PART_LeftPanel") as SlidePanelHost);
-    _initPanel(GetTemplateChild("PART_TopPanel") as SlidePanelHost);
-    _initPanel(GetTemplateChild("PART_RightPanel") as SlidePanelHost);
-    _initPanel(GetTemplateChild("PART_BottomPanel") as SlidePanelHost);
-  }
-
-  private void _initPanel(SlidePanelHost? host) {
-    if (host == null) return;
-    host.SizeChanged += (_, e) => {
-      if (host.ViewModel != null) ViewModel?.SetPin(host.ViewModel);
-      host.UpdateAnimation(e);
-    };
   }
 
   private void _onMouseMove(object sender, MouseEventArgs e) =>
