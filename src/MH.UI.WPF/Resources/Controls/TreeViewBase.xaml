@@ -8,7 +8,8 @@
   xmlns:res="clr-namespace:MH.UI.WPF.Resources"
   xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils"
   xmlns:uiInt="clr-namespace:MH.UI.Interfaces;assembly=MH.UI"
-  xmlns:uInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils">
+  xmlns:uInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils"
+  xmlns:uic="clr-namespace:MH.UI.Controls;assembly=MH.UI">
 
   <PathGeometry x:Key="TreeArrow" Figures="M0,0 L0,10 L5,5 z"/>
 
@@ -202,7 +203,7 @@
     </Setter>
   </Style>
 
-  <DataTemplate x:Key="MH.DT.TreeViewBase.ScrollButtons" DataType="{x:Type uiInt:ITreeView}">
+  <DataTemplate x:Key="MH.DT.TreeViewBase.ScrollButtons" DataType="{x:Type uic:TreeView}">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -232,7 +233,7 @@
     </Grid>
   </DataTemplate>
 
-  <DataTemplate x:Key="MH.DT.TreeView-PathToRootBar" DataType="{x:Type uiInt:ITreeView}">
+  <DataTemplate x:Key="MH.DT.TreeView-PathToRootBar" DataType="{x:Type uic:TreeView}">
     <ItemsControl
       x:Name="ic"
       ItemsSource="{Binding TopTreeItemPath}"

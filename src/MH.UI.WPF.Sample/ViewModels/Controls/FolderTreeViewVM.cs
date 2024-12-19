@@ -6,7 +6,7 @@ using System.IO;
 
 namespace MH.UI.WPF.Sample.ViewModels.Controls;
 
-public class FolderTreeViewVM : TreeView<FolderM> {
+public class FolderTreeViewVM : TreeView {
   public FolderTreeViewVM() {
     ShowTreeItemSelection = true;
     AddDrives();
