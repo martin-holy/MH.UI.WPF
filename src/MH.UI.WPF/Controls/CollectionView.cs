@@ -1,5 +1,4 @@
-﻿using MH.UI.Interfaces;
-using MH.UI.WPF.Extensions;
+﻿using MH.UI.WPF.Extensions;
 using MH.Utils.BaseClasses;
 using System;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using Keyboard = System.Windows.Input.Keyboard;
+using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
@@ -15,10 +15,10 @@ public class CollectionView : TreeViewBase {
   private DateTime _lastClickTime = DateTime.Now;
 
   public static readonly DependencyProperty ViewProperty = DependencyProperty.Register(
-    nameof(View), typeof(ICollectionView), typeof(CollectionView), new(_viewChanged));
+    nameof(View), typeof(UIC.CollectionView), typeof(CollectionView), new(_viewChanged));
 
-  public ICollectionView? View {
-    get => (ICollectionView?)GetValue(ViewProperty);
+  public UIC.CollectionView? View {
+    get => (UIC.CollectionView?)GetValue(ViewProperty);
     set => SetValue(ViewProperty, value);
   }
 

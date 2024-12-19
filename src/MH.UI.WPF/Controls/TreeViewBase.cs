@@ -1,5 +1,4 @@
-﻿using MH.UI.Interfaces;
-using MH.UI.WPF.Extensions;
+﻿using MH.UI.WPF.Extensions;
 using MH.Utils;
 using MH.Utils.BaseClasses;
 using MH.Utils.Interfaces;
@@ -10,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
@@ -20,10 +20,10 @@ public class TreeViewBase : TreeView {
   private ScrollViewer _sv = null!;
 
   public static readonly DependencyProperty TreeViewProperty = DependencyProperty.Register(
-    nameof(TreeView), typeof(ITreeView), typeof(TreeViewBase));
+    nameof(TreeView), typeof(UIC.TreeView), typeof(TreeViewBase));
 
-  public ITreeView? TreeView {
-    get => (ITreeView?)GetValue(TreeViewProperty);
+  public UIC.TreeView? TreeView {
+    get => (UIC.TreeView?)GetValue(TreeViewProperty);
     set => SetValue(TreeViewProperty, value);
   }
 

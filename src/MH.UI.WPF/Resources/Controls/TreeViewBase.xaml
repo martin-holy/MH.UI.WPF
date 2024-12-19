@@ -7,7 +7,6 @@
   xmlns:conv="clr-namespace:MH.UI.WPF.Converters"
   xmlns:res="clr-namespace:MH.UI.WPF.Resources"
   xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils"
-  xmlns:uiInt="clr-namespace:MH.UI.Interfaces;assembly=MH.UI"
   xmlns:uInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils"
   xmlns:uic="clr-namespace:MH.UI.Controls;assembly=MH.UI">
 
@@ -243,7 +242,7 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate DataType="{x:Type uInt:IListItem}">
           <Button
-            Command="{Binding Path=DataContext.(uiInt:ITreeView.ScrollToItemCommand), ElementName=ic}"
+            Command="{Binding Path=DataContext.(uic:TreeView.ScrollToItemCommand), ElementName=ic}"
             CommandParameter="{Binding}"
             ap:Text.Text="{Binding Name}"
             ap:Icon.Data="{Binding Icon, Converter={x:Static conv:ResourceConverter.Inst}}"
