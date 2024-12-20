@@ -10,7 +10,7 @@ using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
-public class CollectionView : TreeViewBase, UIC.ICollectionViewHost {
+public class CollectionView : TreeViewHost, UIC.ICollectionViewHost {
   private double _openTime;
   private DateTime _lastClickTime = DateTime.Now;
 
@@ -24,7 +24,7 @@ public class CollectionView : TreeViewBase, UIC.ICollectionViewHost {
 
   private static void _viewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
     if (d is not CollectionView host) return;
-    host.SetValue(TreeViewBase.ViewModelProperty, host.ViewModel);
+    host.SetValue(TreeViewHost.ViewModelProperty, host.ViewModel);
     if (host.ViewModel == null) return;
     host.ViewModel.Host = host;
   }

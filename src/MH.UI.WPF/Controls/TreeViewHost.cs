@@ -13,14 +13,14 @@ using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
-public class TreeViewBase : TreeView, UIC.ITreeViewHost {
+public class TreeViewHost : TreeView, UIC.ITreeViewHost {
   private bool _isScrollingTo;
   private bool _resetHScroll;
   private double _resetHOffset;
   private ScrollViewer _sv = null!;
 
   public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-    nameof(ViewModel), typeof(UIC.TreeView), typeof(TreeViewBase), new(_viewModelChanged));
+    nameof(ViewModel), typeof(UIC.TreeView), typeof(TreeViewHost), new(_viewModelChanged));
 
   public UIC.TreeView? ViewModel {
     get => (UIC.TreeView?)GetValue(ViewModelProperty);
@@ -28,13 +28,13 @@ public class TreeViewBase : TreeView, UIC.ITreeViewHost {
   }
 
   private static void _viewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    if (d is not TreeViewBase host || host.ViewModel == null) return;
+    if (d is not TreeViewHost host || host.ViewModel == null) return;
     host.ViewModel.Host = host;
   }
 
   public RelayCommand<RequestBringIntoViewEventArgs> TreeItemIntoViewCommand { get; }
 
-  public TreeViewBase() {
+  public TreeViewHost() {
     TreeItemIntoViewCommand = new(_onTreeItemIntoView);
   }
 
@@ -123,7 +123,7 @@ public class TreeViewBase : TreeView, UIC.ITreeViewHost {
         });
       }
       catch (Exception e) {
-        Log.Error("TreeViewBase.ScrollIntoView wasn't successful!", e.Message);
+        Log.Error("TreeViewHost.ScrollIntoView wasn't successful!", e.Message);
       }
     });
   }

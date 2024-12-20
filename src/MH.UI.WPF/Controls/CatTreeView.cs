@@ -8,7 +8,7 @@ using static MH.Utils.DragDropHelper;
 
 namespace MH.UI.WPF.Controls;
 
-public class CatTreeView : TreeViewBase {
+public class CatTreeView : TreeViewHost {
   public CanDragFunc CanDragFunc { get; }
   public CanDropFunc CanDropFunc { get; }
   public DoDropAction DoDropAction { get; }

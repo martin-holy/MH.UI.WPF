@@ -19,7 +19,7 @@
     </u:TypeDataTemplateSelector.TemplateMappings>
   </u:TypeDataTemplateSelector>
 
-  <Style x:Key="MH.S.CollectionView" TargetType="c:CollectionView" BasedOn="{StaticResource MH.S.TreeViewBase}">
+  <Style x:Key="MH.S.CollectionView" TargetType="c:CollectionView" BasedOn="{StaticResource MH.S.TreeViewHost}">
     <Setter Property="ItemContainerStyle" Value="{DynamicResource MH.S.TreeViewItem.Lite}"/>
     <Setter Property="ItemTemplateSelector" Value="{StaticResource MH.DT.CollectionView.TemplateSelector}"/>
   </Style>

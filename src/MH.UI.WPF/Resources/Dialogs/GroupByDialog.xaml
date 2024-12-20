@@ -22,8 +22,8 @@
         <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
-      <c:TreeViewBase
-        Style="{StaticResource MH.S.TreeViewBase}"
+      <c:TreeViewHost
+        Style="{StaticResource MH.S.TreeViewHost}"
         ViewModel="{Binding TreeView}"
         ItemTemplate="{StaticResource DialogTreeItem}"/>
       

@@ -4,7 +4,7 @@
   xmlns:c="clr-namespace:MH.UI.WPF.Controls"
   xmlns:u="clr-namespace:MH.UI.WPF.Utils">
 
-  <Style x:Key="MH.S.CatTreeView" TargetType="c:CatTreeView" BasedOn="{StaticResource MH.S.TreeViewBase}">
+  <Style x:Key="MH.S.CatTreeView" TargetType="c:CatTreeView" BasedOn="{StaticResource MH.S.TreeViewHost}">
     <Setter Property="u:DragDropHelper.IsDragEnabled" Value="True"/>
     <Setter Property="u:DragDropHelper.IsDropEnabled" Value="True"/>
     <Setter Property="u:DragDropHelper.CanDrag" Value="{Binding CanDragFunc, RelativeSource={RelativeSource Self}}"/>
