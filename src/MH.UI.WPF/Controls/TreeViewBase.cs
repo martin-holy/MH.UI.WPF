@@ -13,18 +13,23 @@ using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
-public class TreeViewBase : TreeView {
+public class TreeViewBase : TreeView, UIC.ITreeViewHost {
   private bool _isScrollingTo;
   private bool _resetHScroll;
   private double _resetHOffset;
   private ScrollViewer _sv = null!;
 
-  public static readonly DependencyProperty TreeViewProperty = DependencyProperty.Register(
-    nameof(TreeView), typeof(UIC.TreeView), typeof(TreeViewBase));
+  public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+    nameof(ViewModel), typeof(UIC.TreeView), typeof(TreeViewBase), new(_viewModelChanged));
 
-  public UIC.TreeView? TreeView {
-    get => (UIC.TreeView?)GetValue(TreeViewProperty);
-    set => SetValue(TreeViewProperty, value);
+  public UIC.TreeView? ViewModel {
+    get => (UIC.TreeView?)GetValue(ViewModelProperty);
+    set => SetValue(ViewModelProperty, value);
+  }
+
+  private static void _viewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    if (d is not TreeViewBase host || host.ViewModel == null) return;
+    host.ViewModel.Host = host;
   }
 
   public RelayCommand<RequestBringIntoViewEventArgs> TreeItemIntoViewCommand { get; }
@@ -45,7 +50,7 @@ public class TreeViewBase : TreeView {
   }
 
   private void _setIsVisible() {
-    if (TreeView != null) TreeView.IsVisible = _sv.IsVisible;
+    if (ViewModel != null) ViewModel.IsVisible = _sv.IsVisible;
   }
 
   private void _onTreeItemIntoView(RequestBringIntoViewEventArgs? e) {
@@ -54,8 +59,8 @@ public class TreeViewBase : TreeView {
   }
 
   private void _onScrollChanged(object sender, ScrollChangedEventArgs e) {
-    if (!_isScrollingTo && TreeView != null && _sv.IsVisible)
-      TreeView.TopTreeItem = _getHitTestItem(10, 10);
+    if (!_isScrollingTo && ViewModel != null && _sv.IsVisible)
+      ViewModel.TopTreeItem = _getHitTestItem(10, 10);
 
     if (_resetHScroll) {
       _resetHScroll = false;
@@ -64,31 +69,27 @@ public class TreeViewBase : TreeView {
   }
 
   private void _setItemsSource() {
-    if (TreeView == null) return;
+    if (ViewModel == null) return;
     var expand = false;
-    var root = TreeView.RootHolder.FirstOrDefault() as ITreeItem;
+    var root = ViewModel.RootHolder.FirstOrDefault() as ITreeItem;
     if (root is { IsExpanded: true }) {
       expand = true;
       root.IsExpanded = false;
     }
-    ItemsSource = TreeView.RootHolder;
-    if (expand) _expandRootWhenReady(root!);
-
-    TreeView.ScrollToTopAction = _scrollToTop;
-    TreeView.ScrollToItemsAction = _scrollToItemsWhenReady;
-    TreeView.ExpandRootWhenReadyAction = _expandRootWhenReady;
+    ItemsSource = ViewModel.RootHolder;
+    if (expand) ExpandRootWhenReady(root!);
   }
 
-  private void _scrollToTop() {
+  public void ScrollToTop() {
     if (_sv.VerticalOffset == 0) return;
     _sv.ScrollToTop();
     _sv.UpdateLayout();
 
-    if (!_sv.IsVisible && TreeView != null)
-      TreeView.TopTreeItem = _getHitTestItem(10, 10);
+    if (!_sv.IsVisible && ViewModel != null)
+      ViewModel.TopTreeItem = _getHitTestItem(10, 10);
   }
 
-  private void _scrollToItemsWhenReady(object[] items, bool exactly) =>
+  public void ScrollToItems(object[] items, bool exactly) =>
     _sv.Dispatcher.BeginInvoke(DispatcherPriority.Background, () => _scrollToItems(items, exactly));
 
   private void _scrollToItems(object[] items, bool exactly) {
@@ -168,7 +169,7 @@ public class TreeViewBase : TreeView {
   private ITreeItem? _getHitTestItem(double x, double y) {
     ITreeItem? outItem = null;
     VisualTreeHelper.HitTest(_sv, null, e => {
-      if (e.VisualHit is not FrameworkElement { DataContext: ITreeItem item } || !TreeView!.IsHitTestItem(item))
+      if (e.VisualHit is not FrameworkElement { DataContext: ITreeItem item } || !ViewModel!.IsHitTestItem(item))
         return HitTestResultBehavior.Continue;
 
       outItem = item;
@@ -183,7 +184,7 @@ public class TreeViewBase : TreeView {
   /// TreeView loads all items when everything is expanded.
   /// So I collapsed the root on reload and expanded it after to load just what is in the view.
   /// </summary>
-  private void _expandRootWhenReady(ITreeItem root) =>
+  public void ExpandRootWhenReady(ITreeItem root) =>
     _sv.Dispatcher.BeginInvoke(DispatcherPriority.Loaded, void () => root.IsExpanded = true);
 
   /// <summary>
