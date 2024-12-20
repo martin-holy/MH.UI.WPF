@@ -24,7 +24,7 @@
 
       <c:TreeViewBase
         Style="{StaticResource MH.S.TreeViewBase}"
-        TreeView="{Binding TreeView}"
+        ViewModel="{Binding TreeView}"
         ItemTemplate="{StaticResource DialogTreeItem}"/>
       
       <StackPanel Grid.Row="1" Orientation="Horizontal">

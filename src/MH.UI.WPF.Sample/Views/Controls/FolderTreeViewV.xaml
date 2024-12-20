@@ -6,7 +6,7 @@
   xmlns:m="clr-namespace:MH.UI.WPF.Sample.Models">
 
   <DataTemplate DataType="{x:Type vmc:FolderTreeViewVM}">
-    <mhc:TreeViewBase TreeView="{Binding}">
+    <mhc:TreeViewBase ViewModel="{Binding}">
       <mhc:TreeViewBase.ItemTemplate>
         <HierarchicalDataTemplate DataType="{x:Type m:FolderM}" ItemsSource="{Binding Items}">
           <ContentPresenter Content="{Binding}"/>
