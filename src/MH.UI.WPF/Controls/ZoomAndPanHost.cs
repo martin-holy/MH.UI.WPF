@@ -15,12 +15,12 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
   private UIElement _content = null!;
   private TranslateTransform _contentTransform = null!;
 
-  public static readonly DependencyProperty ZoomAndPanProperty = DependencyProperty.Register(
-    nameof(ZoomAndPan), typeof(ZoomAndPan), typeof(ZoomAndPanHost), new(_onZoomAndPanChanged));
+  public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+    nameof(ViewModel), typeof(ZoomAndPan), typeof(ZoomAndPanHost), new(_onViewModelChanged));
 
-  public ZoomAndPan ZoomAndPan {
-    get => (ZoomAndPan)GetValue(ZoomAndPanProperty);
-    set => SetValue(ZoomAndPanProperty, value);
+  public ZoomAndPan? ViewModel {
+    get => (ZoomAndPan?)GetValue(ViewModelProperty);
+    set => SetValue(ViewModelProperty, value);
   }
 
   double IZoomAndPanHost.Width => ActualWidth;
@@ -81,8 +81,8 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
   private void _onContentMouseWheel(object sender, MouseWheelEventArgs e) =>
     HostMouseWheelEvent?.Invoke(this, (e.Delta, e.GetPosition(_content).ToPointD()));
 
-  private static void _onZoomAndPanChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    if (d is not ZoomAndPanHost host) return;
-    host.ZoomAndPan.Host = host;
+  private static void _onViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+    if (d is not ZoomAndPanHost host || host.ViewModel == null) return;
+    host.ViewModel.Host = host;
   }
 }

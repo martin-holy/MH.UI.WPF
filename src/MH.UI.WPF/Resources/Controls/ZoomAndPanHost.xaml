@@ -15,19 +15,19 @@
               x:Name="PART_Content"
               Content="{Binding Content}"
               RenderTransformOrigin="0,0"
-              Width="{Binding ZoomAndPan.ContentWidth}"
-              Height="{Binding ZoomAndPan.ContentHeight}">
+              Width="{Binding ViewModel.ContentWidth}"
+              Height="{Binding ViewModel.ContentHeight}">
 
               <ContentPresenter.RenderTransform>
                 <TransformGroup>
                   <ScaleTransform
-                    ScaleX="{Binding ZoomAndPan.ScaleX}"
-                    ScaleY="{Binding ZoomAndPan.ScaleY}"/>
+                    ScaleX="{Binding ViewModel.ScaleX}"
+                    ScaleY="{Binding ViewModel.ScaleY}"/>
 
                   <TranslateTransform
                     x:Name="PART_ContentTransform"
-                    X="{Binding ZoomAndPan.TransformX}"
-                    Y="{Binding ZoomAndPan.TransformY}"/>
+                    X="{Binding ViewModel.TransformX}"
+                    Y="{Binding ViewModel.TransformY}"/>
                 </TransformGroup>
               </ContentPresenter.RenderTransform>
             </ContentPresenter>
