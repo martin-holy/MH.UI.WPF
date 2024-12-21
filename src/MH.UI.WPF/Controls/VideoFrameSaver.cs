@@ -35,7 +35,7 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     Stretch = Stretch.Uniform;
     StretchDirection = StretchDirection.Both;
     ScrubbingEnabled = true;
-    MediaOpened += delegate { OnMediaOpened(); };
+    MediaOpened += delegate { _onMediaOpened(); };
   }
 
   public void Save(VfsVideo[] videos, Action<VfsFrame>? onSaveAction, Action<VfsFrame, Exception>? onErrorAction, Action? onFinishedAction) {
@@ -46,13 +46,13 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     _idxVideo = -1;
     MaxWidth = ((FrameworkElement)Parent).ActualWidth;
     MaxHeight = ((FrameworkElement)Parent).ActualHeight;
-    CompositionTarget.Rendering += CompositionTargetOnRendering;
-    NextVideo();
+    CompositionTarget.Rendering += _compositionTargetOnRendering;
+    _nextVideo();
   }
 
-  private void NextVideo() {
+  private void _nextVideo() {
     if (_idxVideo + 1 > _videos!.Length - 1) {
-      CompositionTarget.Rendering -= CompositionTargetOnRendering;
+      CompositionTarget.Rendering -= _compositionTargetOnRendering;
       Source = null;
       _frame = null;
       _video = null;
@@ -67,9 +67,9 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     Stop();
   }
 
-  private void OnMediaOpened() {
+  private void _onMediaOpened() {
     if (NaturalVideoWidth + NaturalVideoHeight == 0) {
-      NextVideo();
+      _nextVideo();
       return;
     }
 
@@ -78,47 +78,47 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     _frame = null;
     Width = NaturalVideoWidth;
     Height = NaturalVideoHeight;
-    Dispatcher.BeginInvoke(DispatcherPriority.Loaded, NextFrame);
+    Dispatcher.BeginInvoke(DispatcherPriority.Loaded, _nextFrame);
   }
 
-  private void NextFrame() {
+  private void _nextFrame() {
     if (_idxFrame + 1 > _video!.Frames.Count - 1) {
       _timeOut.Stop();
-      NextVideo();
+      _nextVideo();
       return;
     }
 
     var oldPos = _frame?.Position ?? 0;
     _frame = _video.Frames[++_idxFrame];
     if (_frame.Position == oldPos) {
-      SaveFrame();
-      NextFrame();
+      _saveFrame();
+      _nextFrame();
       return;
     }
 
-    if (_hash == 0) _hash = GetHash();
+    if (_hash == 0) _hash = _getHash();
     Position = new(0, 0, 0, 0, _frame.Position);
     _timeOut.Reset();
     _timeOut.Start();
     _capture = true;
   }
 
-  private void CompositionTargetOnRendering(object? sender, EventArgs e) {
+  private void _compositionTargetOnRendering(object? sender, EventArgs e) {
     if (!_capture) return;
-    var hash = GetHash();
+    var hash = _getHash();
     if (_timeOut.ElapsedMilliseconds > 2000)
       Log.Error("VideoFrameSaver TimeOut", _frame?.FilePath ?? string.Empty);
     else if (Imaging.CompareHashes(_hash, hash) == 0) return;
     _capture = false;
     _hash = hash;
-    SaveFrame();
-    NextFrame();
+    _saveFrame();
+    _nextFrame();
   }
 
-  private void SaveFrame() {
+  private void _saveFrame() {
     if (_frame == null) return;
     try {
-      Crop(this.ToBitmap(), _frame).Resize(_frame.Size).SaveAsJpeg(_frame.FilePath, _frame.Quality);
+      _crop(this.ToBitmap(), _frame).Resize(_frame.Size).SaveAsJpeg(_frame.FilePath, _frame.Quality);
       _onSaveAction?.Invoke(_frame);
     }
     catch (Exception ex) {
@@ -126,15 +126,15 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     }
   }
 
-  private BitmapSource Crop(BitmapSource bmp, VfsFrame frame) {
+  private BitmapSource _crop(BitmapSource bmp, VfsFrame frame) {
     var rect = new Int32Rect(frame.X, frame.Y, frame.Width, frame.Height);
     if (!rect.HasArea) return bmp;
     if (ActualWidth >= Width && ActualHeight >= Height) return bmp.Crop(rect);
-    rect = ValidateRect(bmp, rect.Scale(ActualWidth / Width), frame);
+    rect = _validateRect(bmp, rect.Scale(ActualWidth / Width), frame);
     return bmp.Crop(rect);
   }
 
-  private static Int32Rect ValidateRect(BitmapSource bmp, Int32Rect rect, VfsFrame frame) {
+  private static Int32Rect _validateRect(BitmapSource bmp, Int32Rect rect, VfsFrame frame) {
     var xDiff = (int)bmp.Width - rect.X - rect.Width;
     var yDiff = (int)bmp.Height - rect.Y - rect.Height;
 
@@ -154,7 +154,7 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     return rect;
   }
 
-  private long GetHash() {
+  private long _getHash() {
     try {
       return this.ToBitmap().GetAvgHash();
     }
