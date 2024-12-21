@@ -34,6 +34,8 @@ public class TreeViewHost : TreeView, UIC.ITreeViewHost {
 
   public RelayCommand<RequestBringIntoViewEventArgs> TreeItemIntoViewCommand { get; }
 
+  public event EventHandler<bool>? HostIsVisibleChangedEvent;
+
   public TreeViewHost() {
     TreeItemIntoViewCommand = new(_onTreeItemIntoView);
   }
@@ -42,16 +44,14 @@ public class TreeViewHost : TreeView, UIC.ITreeViewHost {
     base.OnApplyTemplate();
 
     _sv = (ScrollViewer)Template.FindName("PART_ScrollViewer", this);
-    _sv.IsVisibleChanged += delegate { _setIsVisible(); };
+    _sv.IsVisibleChanged += delegate { _raiseHostIsVisibleChanged(); };
     _sv.ScrollChanged += _onScrollChanged;
 
-    _setIsVisible();
+    _raiseHostIsVisibleChanged();
     _setItemsSource();
   }
 
-  private void _setIsVisible() {
-    if (ViewModel != null) ViewModel.IsVisible = _sv.IsVisible;
-  }
+  private void _raiseHostIsVisibleChanged() => HostIsVisibleChangedEvent?.Invoke(this, _sv.IsVisible);
 
   private void _onTreeItemIntoView(RequestBringIntoViewEventArgs? e) {
     _resetHScroll = true;
