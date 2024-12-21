@@ -10,7 +10,7 @@
   xmlns:mhuInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils"
   xmlns:rd="clr-namespace:MH.UI.WPF.Resources">
 
-  <u:TypeDataTemplateSelector x:Key="MH.DT.CollectionView.TemplateSelector">
+  <u:TypeDataTemplateSelector x:Key="MH.DT.CollectionViewHost.TemplateSelector">
     <u:TypeDataTemplateSelector.TemplateMappings>
       <x:Array Type="{x:Type u:TypeTemplateMapping}">
         <u:TypeTemplateMapping Type="{x:Type uic:CollectionViewGroup`1}" TemplateKey="MH.UI.Controls.CollectionViewGroup`1"/>
@@ -19,9 +19,9 @@
     </u:TypeDataTemplateSelector.TemplateMappings>
   </u:TypeDataTemplateSelector>
 
-  <Style x:Key="MH.S.CollectionView" TargetType="c:CollectionView" BasedOn="{StaticResource MH.S.TreeViewHost}">
+  <Style x:Key="MH.S.CollectionViewHost" TargetType="c:CollectionViewHost" BasedOn="{StaticResource MH.S.TreeViewHost}">
     <Setter Property="ItemContainerStyle" Value="{DynamicResource MH.S.TreeViewItem.Lite}"/>
-    <Setter Property="ItemTemplateSelector" Value="{StaticResource MH.DT.CollectionView.TemplateSelector}"/>
+    <Setter Property="ItemTemplateSelector" Value="{StaticResource MH.DT.CollectionViewHost.TemplateSelector}"/>
   </Style>
 
   <HierarchicalDataTemplate
@@ -168,10 +168,10 @@
 
       <b:Interaction.Triggers>
         <b:EventTrigger EventName="PreviewMouseDoubleClick">
-          <b:InvokeCommandAction Command="c:CollectionView.OpenItemCommand" PassEventArgsToCommand="True"/>
+          <b:InvokeCommandAction Command="c:CollectionViewHost.OpenItemCommand" PassEventArgsToCommand="True"/>
         </b:EventTrigger>
         <b:EventTrigger EventName="PreviewMouseUp">
-          <b:InvokeCommandAction Command="c:CollectionView.SelectItemCommand" PassEventArgsToCommand="True"/>
+          <b:InvokeCommandAction Command="c:CollectionViewHost.SelectItemCommand" PassEventArgsToCommand="True"/>
         </b:EventTrigger>
       </b:Interaction.Triggers>
 

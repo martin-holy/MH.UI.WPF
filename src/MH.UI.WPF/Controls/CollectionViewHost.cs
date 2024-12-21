@@ -10,12 +10,12 @@ using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
-public class CollectionView : TreeViewHost, UIC.ICollectionViewHost {
+public class CollectionViewHost : TreeViewHost, UIC.ICollectionViewHost {
   private double _openTime;
   private DateTime _lastClickTime = DateTime.Now;
 
   public new static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-    nameof(ViewModel), typeof(UIC.CollectionView), typeof(CollectionView), new(_viewModelChanged));
+    nameof(ViewModel), typeof(UIC.CollectionView), typeof(CollectionViewHost), new(_viewModelChanged));
 
   public new UIC.CollectionView? ViewModel {
     get => (UIC.CollectionView?)GetValue(ViewModelProperty);
@@ -23,7 +23,7 @@ public class CollectionView : TreeViewHost, UIC.ICollectionViewHost {
   }
 
   private static void _viewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    if (d is not CollectionView host) return;
+    if (d is not CollectionViewHost host) return;
     host.SetValue(TreeViewHost.ViewModelProperty, host.ViewModel);
     if (host.ViewModel == null) return;
     host.ViewModel.Host = host;
@@ -49,7 +49,7 @@ public class CollectionView : TreeViewHost, UIC.ICollectionViewHost {
 
   private static void _openItem(MouseButtonEventArgs? e) {
     if (e is not { ChangedButton: MouseButton.Left }
-        || (e.OriginalSource as FrameworkElement)?.TryFindParent<CollectionView>() is not { ViewModel.CanOpen: true } cv) return;
+        || (e.OriginalSource as FrameworkElement)?.TryFindParent<CollectionViewHost>() is not { ViewModel.CanOpen: true } cv) return;
 
     cv._openItem(_getDataContext(e.OriginalSource));
   }
@@ -61,7 +61,7 @@ public class CollectionView : TreeViewHost, UIC.ICollectionViewHost {
   }
 
   private static void _selectItem(MouseButtonEventArgs? e) {
-    if ((e?.OriginalSource as FrameworkElement)?.TryFindParent<CollectionView>() is not { ViewModel.CanSelect: true } cv
+    if ((e?.OriginalSource as FrameworkElement)?.TryFindParent<CollectionViewHost>() is not { ViewModel.CanSelect: true } cv
         || cv._doubleClicking()) return;
 
     var item = _getDataContext(e.OriginalSource);
