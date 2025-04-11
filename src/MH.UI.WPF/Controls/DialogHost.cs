@@ -1,6 +1,7 @@
 ﻿using MH.UI.Controls;
 using MH.Utils.BaseClasses;
 using MH.Utils.Extensions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -39,6 +40,13 @@ public class DialogHost : ObservableObject {
     dh.Window.ShowDialog();
 
     return content.Result;
+  }
+
+  public static Task<int> ShowAsync(Dialog content) {
+    var dh = new DialogHost(content);
+    dh.Window.ShowDialog();
+
+    return content.TaskCompletionSource.Task;
   }
 
   private static Window _getOwner() =>
