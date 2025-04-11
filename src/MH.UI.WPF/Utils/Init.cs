@@ -17,8 +17,8 @@ public static class Init {
     MH.Utils.Imaging.GetBitmapHashPixels = Imaging.GetBitmapHashPixels;
     MH.Utils.Imaging.ResizeJpg = Imaging.ResizeJpg;
 
-    MH.UI.Controls.Dialog.Show = DialogHost.Show;
-    MH.UI.Controls.Dialog.ShowAsync = DialogHost.ShowAsync;
+    MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
+    MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
 
     MH.Utils.Tasks.Dispatch = action => Application.Current.Dispatcher.Invoke(DispatcherPriority.Render, action);
 
