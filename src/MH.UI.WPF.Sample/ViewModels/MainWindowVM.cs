@@ -54,9 +54,9 @@ public class MainWindowVM : ObservableObject {
 
   //public static RelayCommand SwitchToBrowserCommand { get; set; }
 
-  public RelayCommand OpenMessageDialogCommand { get; }
-  public RelayCommand OpenInputDialogCommand { get; }
-  public RelayCommand OpenProgressDialogCommand { get; }
+  public AsyncRelayCommand OpenMessageDialogCommand { get; }
+  public AsyncRelayCommand OpenInputDialogCommand { get; }
+  public AsyncRelayCommand OpenProgressDialogCommand { get; }
 
   public RelayCommand OpenControlsTabCommand { get; }
   public RelayCommand OpenButtonsTabCommand { get; }
@@ -109,18 +109,18 @@ public class MainWindowVM : ObservableObject {
     };
   }
 
-  private void OpenMessageDialog() {
-    var result = Dialog.Show(new MessageDialog("Message Dialog", "Sample message", Icons.Folder, true));
+  private async Task OpenMessageDialog(CancellationToken token) {
+    var result = await Dialog.ShowAsync(new MessageDialog("Message Dialog", "Sample message", Icons.Folder, true));
   }
 
-  private void OpenInputDialog() {
+  private async Task OpenInputDialog(CancellationToken token) {
     Func<string?, string?> validator = answer => string.IsNullOrEmpty(answer) ? "Input is empty" : string.Empty;
-    var result = Dialog.Show(new InputDialog("Input Dialog", "Sample message", Icons.Tag, "Sample", validator));
+    var result = await Dialog.ShowAsync(new InputDialog("Input Dialog", "Sample message", Icons.Tag, "Sample", validator));
   }
 
-  private void OpenProgressDialog() {
+  private async Task OpenProgressDialog(CancellationToken token) {
     var items = new[] { "Item 1", "Item 2", "Item 3" };
-    Dialog.Show(new SampleProgressDialog(items));
+    await Dialog.ShowAsync(new SampleProgressDialog(items));
     /*var progress = new ProgressBarSyncDialog("Progress Bar Dialog", Icons.Drive);
     await progress.Init(items, null, item => Task.Delay(1000), item => item, null);
     progress.Start();
