@@ -2,6 +2,7 @@
 using MH.UI.WPF.Extensions;
 using MH.Utils;
 using MH.Utils.Interfaces;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using static MH.Utils.DragDropHelper;
@@ -42,13 +43,13 @@ public class CatTreeView : TreeViewHost {
     return MH.Utils.DragDropEffects.None;
   }
 
-  private static void _doDrop(object data, bool haveSameOrigin) {
-    if (Utils.DragDropHelper.DragEventArgs is not { } e) return;
+  private static Task _doDrop(object data, bool haveSameOrigin) {
+    if (Utils.DragDropHelper.DragEventArgs is not { } e) return Task.CompletedTask;
     var tvi = ((FrameworkElement)e.OriginalSource).FindTemplatedParent<TreeViewItem>();
     if (tvi?.DataContext is not ITreeItem dest ||
-        Tree.GetParentOf<ITreeCategory>(dest) is not { } cat) return;
+        Tree.GetParentOf<ITreeCategory>(dest) is not { } cat) return Task.CompletedTask;
 
     var aboveDest = e.GetPosition(tvi).Y < tvi.ActualHeight / 2;
-    cat.OnDrop(data, dest, aboveDest, (e.KeyStates & DragDropKeyStates.ControlKey) > 0);
+    return cat.OnDrop(data, dest, aboveDest, (e.KeyStates & DragDropKeyStates.ControlKey) > 0);
   }
 }
