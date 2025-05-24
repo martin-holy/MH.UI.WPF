@@ -2,14 +2,14 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:mhc="clr-namespace:MH.UI.WPF.Controls;assembly=MH.UI.WPF"
-  xmlns:vml="clr-namespace:MH.UI.WPF.Sample.ViewModels.Layout"
+  xmlns:layout="clr-namespace:MH.UI.Sample.Layout;assembly=MH.UI.Sample"
   xmlns:ap="clr-namespace:MH.UI.WPF.AttachedProperties;assembly=MH.UI.WPF">
 
-  <DataTemplate DataType="{x:Type vml:MiddleContentVM}">
+  <DataTemplate DataType="{x:Type layout:MiddleContentVM}">
     <TabControl/>
   </DataTemplate>
 
-  <DataTemplate DataType="{x:Type vml:MiddleContentSlotVM}">
+  <DataTemplate DataType="{x:Type layout:MiddleContentSlotVM}">
     <mhc:IconButton
       ap:Icon.Data="{StaticResource IconBug}"
       ap:Icon.Size="15"

@@ -1,4 +1,5 @@
-﻿using MH.UI.WPF.Sample.Views;
+﻿using MH.UI.Sample;
+using MH.UI.WPF.Sample.Views;
 using System.Windows;
 
 namespace MH.UI.WPF.Sample;

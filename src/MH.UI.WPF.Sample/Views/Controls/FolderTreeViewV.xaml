@@ -2,13 +2,12 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:mhc="clr-namespace:MH.UI.WPF.Controls;assembly=MH.UI.WPF"
-  xmlns:vmc="clr-namespace:MH.UI.WPF.Sample.ViewModels.Controls"
-  xmlns:m="clr-namespace:MH.UI.WPF.Sample.Models">
+  xmlns:fc="clr-namespace:MH.UI.Sample.Features.Controls;assembly=MH.UI.Sample">
 
-  <DataTemplate DataType="{x:Type vmc:FolderTreeViewVM}">
+  <DataTemplate DataType="{x:Type fc:FolderTreeViewVM}">
     <mhc:TreeViewHost ViewModel="{Binding}">
       <mhc:TreeViewHost.ItemTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type m:FolderM}" ItemsSource="{Binding Items}">
+        <HierarchicalDataTemplate DataType="{x:Type fc:FolderM}" ItemsSource="{Binding Items}">
           <ContentPresenter Content="{Binding}"/>
         </HierarchicalDataTemplate>
       </mhc:TreeViewHost.ItemTemplate>

@@ -3,9 +3,9 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:mhConv="clr-namespace:MH.UI.WPF.Converters;assembly=MH.UI.WPF"
   xmlns:res="clr-namespace:MH.UI.WPF.Resources;assembly=MH.UI.WPF"
-  xmlns:m="clr-namespace:MH.UI.WPF.Sample.Models">
+  xmlns:fc="clr-namespace:MH.UI.Sample.Features.Controls;assembly=MH.UI.Sample">
     
-  <DataTemplate DataType="{x:Type m:FolderM}">
+  <DataTemplate DataType="{x:Type fc:FolderM}">
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="Auto"/>

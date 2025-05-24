@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:vml="clr-namespace:MH.UI.WPF.Sample.ViewModels.Layout">
+  xmlns:layout="clr-namespace:MH.UI.Sample.Layout;assembly=MH.UI.Sample">
 
-  <DataTemplate DataType="{x:Type vml:RightContentVM}">
+  <DataTemplate DataType="{x:Type layout:RightContentVM}">
     <Grid Background="{StaticResource MH.B.C.Static.Ba}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
