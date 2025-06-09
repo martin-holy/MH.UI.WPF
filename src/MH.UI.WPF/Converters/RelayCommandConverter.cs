@@ -33,7 +33,7 @@ public class RelayCommandConverter : BaseMultiConverter {
         if (!fe.HasAttachedProperty(AP.Icon.FillProperty) || fe.GetValue(AP.Icon.FillProperty) == null)
           fe.SetValue(AP.Icon.FillProperty, ResourceConverter.Inst.Convert(rc.Icon, Resources.Dictionaries.IconToBrush));
         break;
-      case MenuItem mi:
+      case System.Windows.Controls.MenuItem mi:
         mi.Icon ??= GetIcon(rc.Icon);
         break;
     }
@@ -52,7 +52,10 @@ public class RelayCommandConverter : BaseMultiConverter {
       case Button:
         fe.SetValue(AP.Text.TextProperty, rc.Text);
         break;
-      case MenuItem mi: mi.Header ??= rc.Text; break;
+      case System.Windows.Controls.MenuItem mi:
+        if (mi.Header == null || mi.Header is string { Length: 0 })
+          mi.Header = rc.Text;
+        break;
     }
   }
 
