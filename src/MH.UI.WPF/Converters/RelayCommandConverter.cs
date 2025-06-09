@@ -56,7 +56,7 @@ public class RelayCommandConverter : BaseMultiConverter {
     }
   }
 
-  private static Path GetIcon(string icon) =>
+  public static Path GetIcon(string icon) =>
     new() {
       Data = ResourceConverter.Inst.Convert(icon, null) as Geometry,
       Fill = ResourceConverter.Inst.Convert(icon, Resources.Dictionaries.IconToBrush) as Brush,
