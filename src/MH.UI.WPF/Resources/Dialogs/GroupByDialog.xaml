@@ -4,8 +4,8 @@
   xmlns:c="clr-namespace:MH.UI.WPF.Controls"
   xmlns:dlg="clr-namespace:MH.UI.Dialogs;assembly=MH.UI"
   xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils">
-
-  <DataTemplate x:Key="MH.UI.Dialogs.GroupByDialog`1" DataType="{x:Type dlg:GroupByDialog`1}">
+  
+  <DataTemplate x:Key="MH.UI.Dialogs.GroupByDialog" DataType="{x:Type dlg:GroupByDialog}">
     <DataTemplate.Resources>
       <HierarchicalDataTemplate x:Key="DialogTreeItem" DataType="{x:Type ubc:TreeItem}" ItemsSource="{Binding Items}">
         <ContentPresenter
@@ -26,7 +26,7 @@
         Style="{StaticResource MH.S.TreeViewHost}"
         ViewModel="{Binding TreeView}"
         ItemTemplate="{StaticResource DialogTreeItem}"/>
-      
+    
       <StackPanel Grid.Row="1" Orientation="Horizontal">
         <RadioButton
           IsChecked="{Binding IsGroupBy}"
