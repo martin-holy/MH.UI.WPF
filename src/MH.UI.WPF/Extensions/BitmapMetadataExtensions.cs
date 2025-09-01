@@ -13,4 +13,9 @@ public static class BitmapMetadataExtensions {
       return value;
     }
   }
+
+  public static void SetIfContainsQuery(this BitmapMetadata bm, string query, object value) {
+    if (bm.ContainsQuery(query))
+      bm.SetQuery(query, value);
+  }
 }
