@@ -21,11 +21,6 @@ public static class Imaging {
       return a == 0 ? b : a;
     }
 
-    void SetIfContainsQuery(BitmapMetadata bm, string query, object value) {
-      if (bm.ContainsQuery(query))
-        bm.SetQuery(query, value);
-    }
-
     var srcFile = new FileInfo(src);
     var destFile = new FileInfo(dest);
 
@@ -55,11 +50,11 @@ public static class Imaging {
     }
 
     // ifd ImageWidth a ImageHeight
-    SetIfContainsQuery(metadata, "/app1/ifd/{ushort=256}", resized.PixelWidth);
-    SetIfContainsQuery(metadata, "/app1/ifd/{ushort=257}", resized.PixelHeight);
+    metadata.SetIfContainsQuery("/app1/ifd/{ushort=256}", resized.PixelWidth);
+    metadata.SetIfContainsQuery("/app1/ifd/{ushort=257}", resized.PixelHeight);
     // exif ExifImageWidth a ExifImageHeight
-    SetIfContainsQuery(metadata, "/app1/ifd/exif/{ushort=40962}", resized.PixelWidth);
-    SetIfContainsQuery(metadata, "/app1/ifd/exif/{ushort=40963}", resized.PixelHeight);
+    metadata.SetIfContainsQuery("/app1/ifd/exif/{ushort=40962}", resized.PixelWidth);
+    metadata.SetIfContainsQuery("/app1/ifd/exif/{ushort=40963}", resized.PixelHeight);
 
     var encoder = new JpegBitmapEncoder { QualityLevel = quality };
     encoder.Frames.Add(BitmapFrame.Create(resized, thumbnail, metadata, firstFrame.ColorContexts));
