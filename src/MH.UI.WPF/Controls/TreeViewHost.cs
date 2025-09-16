@@ -36,6 +36,8 @@ public class TreeViewHost : TreeView, UIC.ITreeViewHost {
 
   public event EventHandler<bool>? HostIsVisibleChangedEvent;
 
+  double UIC.ITreeViewHost.Width => ActualWidth;
+
   public TreeViewHost() {
     TreeItemIntoViewCommand = new(_onTreeItemIntoView);
   }
