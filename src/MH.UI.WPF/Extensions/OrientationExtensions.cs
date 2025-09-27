@@ -1,5 +1,5 @@
-﻿using MH.Utils;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
+using Orientation = MH.Utils.Imaging.Orientation;
 
 namespace MH.UI.WPF.Extensions;
 
