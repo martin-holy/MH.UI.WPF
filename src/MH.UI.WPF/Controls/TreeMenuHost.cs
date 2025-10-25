@@ -6,13 +6,13 @@ namespace MH.UI.WPF.Controls;
 
 public class TreeMenuHost : Control {
   public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-    nameof(Icon), typeof(object), typeof(TreeMenuHost));
+    nameof(Icon), typeof(string), typeof(TreeMenuHost));
 
   public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
     nameof(Menu), typeof(IEnumerable<MH.Utils.BaseClasses.MenuItem>), typeof(TreeMenuHost));
 
-  public object Icon {
-    get => GetValue(IconProperty);
+  public string Icon {
+    get => (string)GetValue(IconProperty);
     set => SetValue(IconProperty, value);
   }
 
