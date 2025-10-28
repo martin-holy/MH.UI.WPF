@@ -6,9 +6,9 @@
   xmlns:rd="clr-namespace:MH.UI.WPF.Resources"
   xmlns:uic="clr-namespace:MH.UI.Controls;assembly=MH.UI">
 
-  <Style x:Key="MH.S.TreeMenuItem" TargetType="MenuItem" BasedOn="{StaticResource MH.S.MenuItem}">
+  <Style x:Key="MH.S.TreeMenuItem" TargetType="MenuItem" BasedOn="{StaticResource MH.S.MenuItem-Base}">
     <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static conv:IconConverter.Inst}}"/>
-    <Setter Property="Header" Value="{Binding Name}"/>
+    <Setter Property="Header" Value="{Binding Text}"/>
     <Setter Property="Command" Value="{Binding Command}"/>
     <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>
     <Setter Property="ItemsSource" Value="{Binding Items}"/>
