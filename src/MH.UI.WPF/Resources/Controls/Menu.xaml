@@ -392,8 +392,8 @@
       </Setter.Value>
     </Setter>
   </Style>
-
-  <Style x:Key="MH.S.MenuItem" TargetType="MenuItem">
+  
+  <Style x:Key="MH.S.MenuItem-Base" TargetType="MenuItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
     <Setter Property="Background" Value="Transparent"/>
@@ -426,6 +426,11 @@
       <Trigger Property="IsSuspendingPopupAnimation" Value="True">
         <Setter Property="Popup.PopupAnimation" Value="None"/>
       </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <Style x:Key="MH.S.MenuItem" TargetType="MenuItem" BasedOn="{StaticResource MH.S.MenuItem-Base}">
+    <Style.Triggers>
       <DataTrigger Value="True">
         <DataTrigger.Binding>
           <MultiBinding Converter="{x:Static conv:RelayCommandConverter.Inst}">
