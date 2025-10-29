@@ -23,7 +23,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="c:TreeMenuHost">
           <Menu Background="Transparent" VerticalAlignment="Center" Margin="0">
-            <MenuItem ItemsSource="{Binding Menu, RelativeSource={RelativeSource TemplatedParent}}" Padding="6,2,-2,2">
+            <MenuItem x:Name="PART_RootMenuItem" ItemsSource="{Binding Menu, RelativeSource={RelativeSource TemplatedParent}}" Padding="6,2,-2,2">
               <MenuItem.Icon>
                 <Path
                   Data="{Binding Icon, Converter={x:Static conv:ResourceConverter.Inst}}"

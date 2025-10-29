@@ -20,4 +20,15 @@ public class TreeMenuHost : Control {
     get => (IEnumerable<MH.Utils.BaseClasses.MenuItem>)GetValue(MenuProperty);
     set => SetValue(MenuProperty, value);
   }
+
+  public override void OnApplyTemplate() {
+    base.OnApplyTemplate();
+
+    if (GetTemplateChild("PART_RootMenuItem") is MenuItem rootMenuItem)
+      rootMenuItem.SubmenuOpened += _onMenuOpened;
+  }
+
+  private void _onMenuOpened(object sender, RoutedEventArgs e) {
+    (DataContext as MH.Utils.BaseClasses.ObservableObject)?.OnPropertyChanged("Menu");
+  }
 }
