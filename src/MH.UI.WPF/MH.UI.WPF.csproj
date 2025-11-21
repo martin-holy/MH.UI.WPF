@@ -4,26 +4,51 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+		
     <Authors>Martin Holý</Authors>
+		<Company>Martin Holý</Company>
     <Copyright>Martin Holý</Copyright>
+		
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Version>$(CurrentDateTimeVersion)</Version>
-    <AssemblyVersion>$(CurrentDateTimeVersion)</AssemblyVersion>
-    <FileVersion>$(CurrentDateTimeVersion)</FileVersion>
+		<!-- Package info for NuGet -->
+		<PackageId>MH.UI.WPF</PackageId>
+		<Description>
+			Modern WPF UI library. It provides a rich set of controls including TreeView, CollectionView, TabControl, dialogs (MessageDialog, InputDialog, ToggleDialog, ...), media playback (MediaPlayerControlPanel), ZoomAndPan controls, and various UI helpers such as icons, buttons, sliders, and converters. Designed for MVVM-friendly development and polished user interfaces.
+		</Description>
+		<PackageTags>
+			WPF, UI, controls, dialogs, converters, media, zoom, pan, TreeView, CollectionView, TabControl, Icon, Slider, Button, CustomWindow, MVVM
+		</PackageTags>
+		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/martin-holy/MH.UI.WPF</RepositoryUrl>
+
+		<Version>3.0.0</Version>
+		<AssemblyVersion>3.0.0.0</AssemblyVersion>
+		<FileVersion>3.0.0.0</FileVersion>
+
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\MH.UI\src\MH.UI\MH.UI.csproj" />
-    <ProjectReference Include="..\..\..\MH.Utils\src\MH.Utils\MH.Utils.csproj" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<PackageReference Include="MH.UI" Version="4.0.0" />
+		<PackageReference Include="MH.Utils" Version="3.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
+		<ProjectReference Include="..\..\..\MH.UI\src\MH.UI\MH.UI.csproj" />
+		<ProjectReference Include="..\..\..\MH.Utils\src\MH.Utils\MH.Utils.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
