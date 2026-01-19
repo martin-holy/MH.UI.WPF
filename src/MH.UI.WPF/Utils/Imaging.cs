@@ -1,4 +1,5 @@
 ﻿using MH.UI.WPF.Extensions;
+using MH.Utils;
 using System;
 using System.Globalization;
 using System.IO;
@@ -10,17 +11,6 @@ namespace MH.UI.WPF.Utils;
 
 public static class Imaging {
   public static void ResizeJpg(string src, string dest, int px, bool withMetadata, bool withThumbnail, int quality) {
-    int GreatestCommonDivisor(int a, int b) {
-      while (a != 0 && b != 0) {
-        if (a > b)
-          a %= b;
-        else
-          b %= a;
-      }
-
-      return a == 0 ? b : a;
-    }
-
     var srcFile = new FileInfo(src);
     var destFile = new FileInfo(dest);
 
@@ -32,7 +22,7 @@ public static class Imaging {
 
     var pxw = firstFrame.PixelWidth; // image width
     var pxh = firstFrame.PixelHeight; // image height
-    var gcd = GreatestCommonDivisor(pxw, pxh);
+    var gcd = MathU.GreatestCommonDivisor(pxw, pxh);
     var rw = pxw / gcd; // image ratio
     var rh = pxh / gcd; // image ratio
     var q = Math.Sqrt((double)px / (rw * rh)); // Bulgarian constant
