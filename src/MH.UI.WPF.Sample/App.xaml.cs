@@ -11,6 +11,7 @@ public partial class App {
   protected override async void OnStartup(StartupEventArgs e) {
     base.OnStartup(e);
 
+    Utils.Init.SetDelegates();
     Utils.ColorHelper.AddColorsToResources();
 
     var splashScreen = new SplashScreenV();
