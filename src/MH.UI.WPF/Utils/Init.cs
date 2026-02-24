@@ -20,7 +20,7 @@ public static class Init {
     MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
     MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
 
-    MH.Utils.Tasks.Dispatch = action => Application.Current.Dispatcher.Invoke(DispatcherPriority.Render, action);
+    MH.Utils.Tasks.Dispatch = action => Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, action);
 
     CommandManager.RequerySuggested += RelayCommandBase.RaiseAllCanExecuteChanged;
   }
