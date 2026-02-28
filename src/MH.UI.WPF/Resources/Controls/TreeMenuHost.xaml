@@ -4,7 +4,8 @@
   xmlns:c="clr-namespace:MH.UI.WPF.Controls"
   xmlns:conv="clr-namespace:MH.UI.WPF.Converters"
   xmlns:rd="clr-namespace:MH.UI.WPF.Resources"
-  xmlns:uic="clr-namespace:MH.UI.Controls;assembly=MH.UI">
+  xmlns:uic="clr-namespace:MH.UI.Controls;assembly=MH.UI"
+  xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils">
 
   <Style x:Key="MH.S.TreeMenuItem" TargetType="MenuItem" BasedOn="{StaticResource MH.S.MenuItem-Base}">
     <Setter Property="Icon" Value="{Binding Icon, Converter={x:Static conv:IconConverter.Inst}}"/>
@@ -13,7 +14,26 @@
     <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>
     <Setter Property="ItemsSource" Value="{Binding Items}"/>
     <Setter Property="InputGestureText" Value="{Binding InputGestureText}"/>
+    <Setter Property="Visibility" Value="{Binding IsHidden, Converter={x:Static conv:VisibilityConverter.FalseToVisible}}"/>
   </Style>
+  
+  <Style x:Key="MH.S.TreeMenuItemSeparator" TargetType="MenuItem">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <Separator Margin="34,2,2,2"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+    <Setter Property="IsEnabled" Value="False"/>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="IsHitTestVisible" Value="False"/>
+    <Setter Property="Height" Value="5"/>
+  </Style>
+  
+  <c:TreeMenuItemContainerStyleSelector x:Key="TreeMenuItemStyleSelector"
+    MenuItemStyle="{StaticResource MH.S.TreeMenuItem}"
+    SeparatorStyle="{StaticResource MH.S.TreeMenuItemSeparator}"/>
 
   <Style x:Key="MH.S.TreeMenuHost" TargetType="c:TreeMenuHost">
     <Setter Property="Background" Value="Transparent"/>
@@ -23,7 +43,12 @@
       <Setter.Value>
         <ControlTemplate TargetType="c:TreeMenuHost">
           <Menu Background="Transparent" VerticalAlignment="Center" Margin="0">
-            <MenuItem x:Name="PART_RootMenuItem" ItemsSource="{Binding Menu, RelativeSource={RelativeSource TemplatedParent}}" Padding="6,2,-2,2">
+            <MenuItem
+              x:Name="PART_RootMenuItem"
+              ItemsSource="{Binding Menu, RelativeSource={RelativeSource TemplatedParent}}"
+              ItemContainerStyleSelector="{StaticResource TreeMenuItemStyleSelector}"
+              Padding="6,2,-2,2">
+              
               <MenuItem.Icon>
                 <Path
                   Data="{Binding Icon, Converter={x:Static conv:ResourceConverter.Inst}}"
@@ -31,12 +56,6 @@
                           ConverterParameter={x:Static rd:Dictionaries.IconToBrush}}"
                   Style="{StaticResource MH.S.Icon.Shadow}"/>
               </MenuItem.Icon>
-
-              <MenuItem.ItemContainerStyle>
-                <Style TargetType="MenuItem" BasedOn="{StaticResource MH.S.TreeMenuItem}">
-                  <Setter Property="ItemContainerStyle" Value="{StaticResource MH.S.TreeMenuItem}"/>
-                </Style>
-              </MenuItem.ItemContainerStyle>
             </MenuItem>
           </Menu>
         </ControlTemplate>

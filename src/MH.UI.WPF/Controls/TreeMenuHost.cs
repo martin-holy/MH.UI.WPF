@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MH.Utils.Interfaces;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,15 +10,15 @@ public class TreeMenuHost : Control {
     nameof(Icon), typeof(string), typeof(TreeMenuHost));
 
   public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
-    nameof(Menu), typeof(IEnumerable<MH.Utils.BaseClasses.MenuItem>), typeof(TreeMenuHost));
+    nameof(Menu), typeof(IEnumerable<ITreeItem>), typeof(TreeMenuHost));
 
   public string Icon {
     get => (string)GetValue(IconProperty);
     set => SetValue(IconProperty, value);
   }
 
-  public IEnumerable<MH.Utils.BaseClasses.MenuItem> Menu {
-    get => (IEnumerable<MH.Utils.BaseClasses.MenuItem>)GetValue(MenuProperty);
+  public IEnumerable<ITreeItem> Menu {
+    get => (IEnumerable<ITreeItem>)GetValue(MenuProperty);
     set => SetValue(MenuProperty, value);
   }
 
