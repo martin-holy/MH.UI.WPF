@@ -51,7 +51,7 @@
           Style="{DynamicResource MH.S.ToggleButton.TreeExpandCollapse}"
           IsChecked="{Binding IsExpanded, Mode=TwoWay}"/>
 
-        <c:TreeMenuHost Grid.Column="1" Menu="{Binding Menu}" Icon="{Binding Icon}"/>
+        <c:TreeMenuHost Grid.Column="1" Menu="{Binding Menu}" Icon="{Binding Icon}" MenuPropertyName="Menu"/>
 
         <TextBlock
           Grid.Column="2"

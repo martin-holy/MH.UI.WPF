@@ -12,6 +12,9 @@ public class TreeMenuHost : Control {
   public static readonly DependencyProperty MenuProperty = DependencyProperty.Register(
     nameof(Menu), typeof(IEnumerable<ITreeItem>), typeof(TreeMenuHost));
 
+  public static readonly DependencyProperty MenuPropertyNameProperty = DependencyProperty.Register(
+    nameof(MenuPropertyName), typeof(string), typeof(TreeMenuHost));
+
   public string Icon {
     get => (string)GetValue(IconProperty);
     set => SetValue(IconProperty, value);
@@ -22,6 +25,11 @@ public class TreeMenuHost : Control {
     set => SetValue(MenuProperty, value);
   }
 
+  public string? MenuPropertyName {
+    get => (string?)GetValue(MenuPropertyNameProperty);
+    set => SetValue(MenuPropertyNameProperty, value);
+  }
+
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
 
@@ -30,6 +38,7 @@ public class TreeMenuHost : Control {
   }
 
   private void _onMenuOpened(object sender, RoutedEventArgs e) {
-    (DataContext as MH.Utils.BaseClasses.ObservableObject)?.OnPropertyChanged("Menu");
+    if (DataContext is MH.Utils.BaseClasses.ObservableObject o && MenuPropertyName != null)
+      o.OnPropertyChanged(MenuPropertyName);
   }
 }
