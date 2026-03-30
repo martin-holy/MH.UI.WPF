@@ -12,7 +12,6 @@
             DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
 
             <ContentPresenter
-              x:Name="PART_Content"
               Content="{Binding Content}"
               RenderTransformOrigin="0,0"
               Width="{Binding ViewModel.ContentWidth}"

@@ -1,6 +1,5 @@
 ﻿using MH.UI.Controls;
 using MH.UI.WPF.Extensions;
-using MH.Utils.Types;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,8 +11,8 @@ namespace MH.UI.WPF.Controls;
 
 public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
   private Canvas _canvas = null!;
-  private UIElement _content = null!;
   private TranslateTransform _contentTransform = null!;
+  private DependencyProperty? _animatedProperty;
 
   public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
     nameof(ViewModel), typeof(ZoomAndPan), typeof(ZoomAndPanHost), new(_onViewModelChanged));
@@ -23,66 +22,64 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
     set => SetValue(ViewModelProperty, value);
   }
 
-  double IZoomAndPanHost.Width => ActualWidth;
-  double IZoomAndPanHost.Height => ActualHeight;
-
-  public event EventHandler? HostSizeChangedEvent;
-  public event EventHandler<PointD>? HostMouseMoveEvent;
-  public event EventHandler<(PointD, PointD)>? HostMouseDownEvent;
-  public event EventHandler? HostMouseUpEvent;
-  public event EventHandler<(int, PointD)>? HostMouseWheelEvent;
-
   public override void OnApplyTemplate() {
     base.OnApplyTemplate();
 
     _canvas = (Canvas)GetTemplateChild("PART_Canvas")!;
-    _canvas.SizeChanged += _onCanvasSizeChanged;
-    _canvas.MouseMove += _onCanvasMouseMove;
-
-    _content = (UIElement)GetTemplateChild("PART_Content")!;
-    _content.MouseLeftButtonDown += _onContentMouseLeftButtonDown;
-    _content.MouseLeftButtonUp += _onContentMouseLeftButtonUp;
-    _content.MouseWheel += _onContentMouseWheel;
+    _canvas.SizeChanged += _onSizeChanged;
+    _canvas.MouseMove += _onMouseMove;
+    _canvas.MouseWheel += _onMouseWheel;
+    _canvas.MouseLeftButtonDown += _onMouseLeftButtonDown;
+    _canvas.MouseLeftButtonUp += _onMouseLeftButtonUp;
+    _canvas.LostMouseCapture += (_, _) => _canvas.Cursor = Cursors.Arrow;
 
     _contentTransform = (TranslateTransform)GetTemplateChild("PART_ContentTransform")!;
   }
 
   public void StartAnimation(double toValue, double duration, bool horizontal, Action onCompleted) {
+    _animatedProperty = horizontal ? TranslateTransform.XProperty : TranslateTransform.YProperty;
     var animation = new DoubleAnimation(0, toValue, TimeSpan.FromMilliseconds(duration), FillBehavior.Stop);
     animation.Completed += (_, _) => onCompleted();
-    _contentTransform.BeginAnimation(horizontal
-      ? TranslateTransform.XProperty
-      : TranslateTransform.YProperty, animation);
+    _contentTransform.BeginAnimation(_animatedProperty, animation);
   }
 
-  public void StopAnimation() =>
-    _contentTransform.BeginAnimation(TranslateTransform.XProperty, null);
-
-  private void _onCanvasSizeChanged(object sender, SizeChangedEventArgs e) =>
-    HostSizeChangedEvent?.Invoke(this, EventArgs.Empty);
-
-  private void _onCanvasMouseMove(object sender, MouseEventArgs e) {
-    if (!_content.IsMouseCaptured) return;
-    HostMouseMoveEvent?.Invoke(this, e.GetPosition(_canvas).ToPointD());
+  public void StopAnimation() {
+    if (_animatedProperty != null)
+      _contentTransform.BeginAnimation(_animatedProperty, null);
   }
 
-  private void _onContentMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-    HostMouseDownEvent?.Invoke(this, new(e.GetPosition(_canvas).ToPointD(), e.GetPosition(_content).ToPointD()));
+  private void _onSizeChanged(object sender, SizeChangedEventArgs e) =>
+    ViewModel?.SetHostSize(ActualWidth, ActualHeight);
+
+  private void _onMouseMove(object sender, MouseEventArgs e) {
+    if (!_canvas.IsMouseCaptured) return;
+    ViewModel?.PointerMove(e.GetPosition(_canvas).ToPointD());
+  }
+
+  private void _onMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+    var hostPos = e.GetPosition(_canvas).ToPointD();
+
+    if (ViewModel?.IsZoomed == false)
+      ViewModel.ZoomToFinalScale(1.0, hostPos);
+
+    ViewModel?.PointerDown(hostPos);
     _canvas.Cursor = Cursors.Hand;
-    _content.CaptureMouse();
+    _canvas.CaptureMouse();
   }
 
-  private void _onContentMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-    _canvas.Cursor = Cursors.Arrow;
-    _content.ReleaseMouseCapture();
-    HostMouseUpEvent?.Invoke(this, EventArgs.Empty);
+  private void _onMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+    _canvas.ReleaseMouseCapture();
+    ViewModel?.PointerUp();
   }
 
-  private void _onContentMouseWheel(object sender, MouseWheelEventArgs e) =>
-    HostMouseWheelEvent?.Invoke(this, (e.Delta, e.GetPosition(_content).ToPointD()));
+  private void _onMouseWheel(object sender, MouseWheelEventArgs e) {
+    if (!MH.Utils.Keyboard.IsCtrlOn()) return;
+    ViewModel?.Zoom(e.Delta > 0 ? 1.2 : 1 / 1.2, e.GetPosition(_canvas).ToPointD());
+  }
 
   private static void _onViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-    if (d is not ZoomAndPanHost host || host.ViewModel == null) return;
-    host.ViewModel.Host = host;
+    if (d is not ZoomAndPanHost host) return;
+    if (e.OldValue is ZoomAndPan oldVm) oldVm.Host = null;
+    if (e.NewValue is ZoomAndPan newVm) newVm.Host = host;
   }
 }
