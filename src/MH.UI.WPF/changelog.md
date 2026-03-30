@@ -1,6 +1,7 @@
 3.2.0:
 	- [N] TabControl: NoTabsText
 	- [N] VisibilityConverter: TypeToVisible
+	- [C] ZoomAndPanHost: Refactor to new ZoomAndPan
 
 3.1.0:
 	- [U] Tasks.Dispatch with DispatcherPriority.Normal
