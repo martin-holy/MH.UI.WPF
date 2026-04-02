@@ -59,9 +59,7 @@ public class ZoomAndPanHost : ContentControl, IZoomAndPanHost {
   private void _onMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
     var hostPos = e.GetPosition(_canvas).ToPointD();
 
-    if (ViewModel?.IsZoomed == false)
-      ViewModel.ZoomToFinalScale(1.0, hostPos);
-
+    ViewModel?.ZoomTo100(hostPos);
     ViewModel?.PointerDown(hostPos);
     _canvas.Cursor = Cursors.Hand;
     _canvas.CaptureMouse();
