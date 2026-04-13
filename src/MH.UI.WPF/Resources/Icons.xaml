@@ -18,12 +18,12 @@
   <PathGeometry x:Key="IconTimer" Figures="M 446.28,515.84 C 428.93,498.47 418.2,474.49 418.2,448 c 0,-26.49 10.73,-50.47 28.08,-67.84 37.76,-37.76 430.08,-294.398 430.08,-294.398 0,0 -256,392.318 -293.76,430.078 -17.4,17.54 -41.51,28.4 -68.16,28.4 -26.65,0 -50.76,-10.86 -68.16,-28.39 z M 514.12,-63.998 V 128 h -64 V 37.762 C 248.33,69.421 95.804,242.03 95.804,450.26 c 0,230.46 186.826,417.28 417.276,417.28 230.46,0 417.28,-186.82 417.28,-417.28 0,-80.36 -22.71,-155.41 -62.07,-219.09 l 58.63,-84.61 c 61.32,83.39 98.18,188.12 98.18,301.44 0,282.77 -229.27,512 -512.04,512 C 230.29,960 1.059,730.77 1.059,448 1.059,165.23 230.29,-63.999 513.06,-63.999 c 0.37,0 0.74,0 1.12,0 z" />
   <!-- IconPack Unknown -->
   <PathGeometry x:Key="IconXCross" Figures="M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z" />
-  <PathGeometry x:Key="IconTimelineShift.Beginning" Figures="M896 0v896l-640-448zM128 896h128v-896h-128v896z"/>
-  <PathGeometry x:Key="IconTimelineShift.LargeBack" Figures="M11.4,6.9L11.4,17.2 6.1,12.1 11.4,6.9z M6.0,6.9L6.0,17.2 0.7,12.1 6.0,6.9z"/>
-  <PathGeometry x:Key="IconTimelineShift.SmallBack" Figures="M9.3,6.9L9.3,17.2 4,12.1 9.3,6.9z"/>
-  <PathGeometry x:Key="IconTimelineShift.SmallForward" Figures="M6,6.9L11.3,12.1 6,17.2 6,6.9z"/>
-  <PathGeometry x:Key="IconTimelineShift.LargeForward" Figures="M6.1,6.9L11.4,12.1 6.1,17.2 6.1,6.9z M0.7,6.9L6.1,12.1 0.7,17.2 0.7,6.9z"/>
-  <PathGeometry x:Key="IconTimelineShift.End" Figures="M128 896v-896l640 448zM768 896h128v-896h-128v896z"/>
+  <PathGeometry x:Key="IconTimelineShiftBeginning" Figures="M896 0v896l-640-448zM128 896h128v-896h-128v896z"/>
+  <PathGeometry x:Key="IconTimelineShiftLargeBack" Figures="M11.4,6.9L11.4,17.2 6.1,12.1 11.4,6.9z M6.0,6.9L6.0,17.2 0.7,12.1 6.0,6.9z"/>
+  <PathGeometry x:Key="IconTimelineShiftSmallBack" Figures="M9.3,6.9L9.3,17.2 4,12.1 9.3,6.9z"/>
+  <PathGeometry x:Key="IconTimelineShiftSmallForward" Figures="M6,6.9L11.3,12.1 6,17.2 6,6.9z"/>
+  <PathGeometry x:Key="IconTimelineShiftLargeForward" Figures="M6.1,6.9L11.4,12.1 6.1,17.2 6.1,6.9z M0.7,6.9L6.1,12.1 0.7,17.2 0.7,6.9z"/>
+  <PathGeometry x:Key="IconTimelineShiftEnd" Figures="M128 896v-896l640 448zM768 896h128v-896h-128v896z"/>
   <PathGeometry x:Key="IconPlay" Figures="M1.2,5.0L12.8,11.5 1.2,17.9 1.2,5.0z"/>
   <PathGeometry x:Key="IconStop" Figures="M18,18H6V6H18V18Z"/>
   <PathGeometry x:Key="IconPause" Figures="M8.8,7.4L11.1,7.4 11.1,17.7 8.8,17.7 8.8,7.4z M4.8,7.4L7.1,7.4 7.1,17.7 4.8,17.7 4.8,7.4z"/>
