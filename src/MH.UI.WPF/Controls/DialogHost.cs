@@ -1,6 +1,7 @@
 ﻿using MH.UI.Controls;
+using MH.Utils;
 using MH.Utils.BaseClasses;
-using MH.Utils.Extensions;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,8 @@ using System.Windows.Controls;
 namespace MH.UI.WPF.Controls;
 
 public class DialogHost : ObservableObject {
+  private IDisposable _resultBinding;
+
   public Dialog Content { get; }
   public CustomWindow Window { get; }
   public DataTemplateSelector? DialogTemplateSelector { get; }
@@ -29,10 +32,8 @@ public class DialogHost : ObservableObject {
 
     DialogTemplateSelector = Application.Current.FindResource("MH.S.DialogHost.DialogTemplateSelector") as DataTemplateSelector;
 
-    content.PropertyChanged += (_, e) => {
-      if (e.Is(nameof(content.Result)))
-        Window.Close();
-    };
+    _resultBinding = content.Bind(nameof(Dialog.Result), x => x.Result, _ => Window.Close(), false);
+    Window.Closing += (_, _) => _resultBinding.Dispose();
   }
 
   public static int Show(Dialog content) {
