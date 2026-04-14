@@ -3,6 +3,7 @@
 	- [N] VisibilityConverter: TypeToVisible
 	- [C] ZoomAndPanHost: Refactor to new ZoomAndPan
 	- [U] Icons: TimelineShift icon names without dot
+	- [C] DialogHost: Result changed unsubscribe
 
 3.1.0:
 	- [U] Tasks.Dispatch with DispatcherPriority.Normal
