@@ -5,7 +5,7 @@ using UIC = MH.UI.Controls;
 
 namespace MH.UI.WPF.Controls;
 
-public class MediaPlayer : MediaElement, IPlatformSpecificUiMediaPlayer {
+public class MediaPlayer : MediaElement, IUiMediaPlayer {
   public UIC.MediaPlayer? ViewModel { get; set; }
 
   public MediaPlayer() {
