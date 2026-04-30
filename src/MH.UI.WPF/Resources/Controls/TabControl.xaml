@@ -140,15 +140,18 @@
               FontSize="26"
               Foreground="{StaticResource MH.B.Gray3}"
               Visibility="{Binding ElementName=contentPanel, Path=HasItems, Converter={x:Static conv:VisibilityConverter.FalseToVisible}}"/>
-
+            
             <DockPanel x:Name="headerPanel" Grid.Column="0" Grid.Row="0">
               <ContentPresenter
-                DockPanel.Dock="{Binding
-                                 Path=DataContext.(uic:TabControl.TabStrip).(uic:TabStrip.SlotPlacement),
-                                 RelativeSource={RelativeSource AncestorType=TabControl},
-                                 Converter={x:Static conv:DockConverter.Inst}}"
-                Content="{Binding Path=(uic:TabControl.TabStrip).(uic:TabStrip.Slot)}"/>
-
+                x:Name="startSlot"
+                DockPanel.Dock="Left"
+                Content="{Binding Path=(uic:TabControl.TabStrip).(uic:TabStrip.StartSlot)}"/>
+  
+              <ContentPresenter
+                x:Name="endSlot"
+                DockPanel.Dock="Right"
+                Content="{Binding Path=(uic:TabControl.TabStrip).(uic:TabStrip.EndSlot)}"/>
+              
               <TabPanel x:Name="tabPanel" IsItemsHost="True" Margin="0"/>
             </DockPanel>
 
@@ -198,6 +201,8 @@
             <Trigger Property="TabStripPlacement" Value="Left">
               <Setter TargetName="headerPanel" Property="Grid.Row" Value="0"/>
               <Setter TargetName="headerPanel" Property="Grid.Column" Value="0"/>
+              <Setter TargetName="startSlot" Property="DockPanel.Dock" Value="Top"/>
+              <Setter TargetName="endSlot" Property="DockPanel.Dock" Value="Bottom"/>
               <Setter TargetName="contentPanel" Property="Grid.Row" Value="0"/>
               <Setter TargetName="contentPanel" Property="Grid.Column" Value="1"/>
               <Setter TargetName="row0" Property="Height" Value="*"/>
@@ -208,6 +213,8 @@
             <Trigger Property="TabStripPlacement" Value="Right">
               <Setter TargetName="headerPanel" Property="Grid.Row" Value="0"/>
               <Setter TargetName="headerPanel" Property="Grid.Column" Value="1"/>
+              <Setter TargetName="startSlot" Property="DockPanel.Dock" Value="Top"/>
+              <Setter TargetName="endSlot" Property="DockPanel.Dock" Value="Bottom"/>
               <Setter TargetName="contentPanel" Property="Grid.Row" Value="0"/>
               <Setter TargetName="contentPanel" Property="Grid.Column" Value="0"/>
               <Setter TargetName="row0" Property="Height" Value="*"/>
