@@ -1,3 +1,6 @@
+4.0.1:
+	- [U] MH.UI v5.1.1
+
 4.0.0:
 	- [N] TabControl: NoTabsText
 	- [N] VisibilityConverter: TypeToVisible
