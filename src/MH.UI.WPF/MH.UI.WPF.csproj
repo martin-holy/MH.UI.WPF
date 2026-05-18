@@ -25,9 +25,9 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/martin-holy/MH.UI.WPF</RepositoryUrl>
 
-		<Version>4.0.0</Version>
+		<Version>4.0.1</Version>
 		<AssemblyVersion>4.0.0.0</AssemblyVersion>
-		<FileVersion>4.0.0.0</FileVersion>
+		<FileVersion>4.0.1.0</FileVersion>
 
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -38,7 +38,7 @@
   </ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<PackageReference Include="MH.UI" Version="5.0.0" />
+		<PackageReference Include="MH.UI" Version="5.1.1" />
 		<PackageReference Include="MH.Utils" Version="4.0.0" />
 	</ItemGroup>
 
