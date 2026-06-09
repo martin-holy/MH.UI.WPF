@@ -8,6 +8,12 @@ using System.Windows.Interop;
 
 namespace MH.UI.WPF.Controls;
 
+// I tried many things (WM_NCCALCSIZE, WM_GETMINMAXINFO, WindowChrome, ...) to fix the bugs:
+// - window not minimized when clicked on icon in taskbar
+// - window restored from minimized when previously minimized with Win+D and than other app restored
+// but fixing them with ResizeMode=CanRestore leads to other problems with system resize border overflow,
+// gap between window and taskbar, not working full screen, ...
+
 public class CustomWindow : Window {
   public static readonly DependencyProperty CanResizeProperty = DependencyProperty.Register(
     nameof(CanResize), typeof(bool), typeof(CustomWindow));
