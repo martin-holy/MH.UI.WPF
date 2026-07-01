@@ -1,5 +1,6 @@
 ﻿using MH.UI.Interfaces;
 using MH.UI.WPF.Extensions;
+using MH.Utils.BaseClasses;
 using MH.Utils.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,9 +14,9 @@ public class CollectionViewItemSizeConverter : BaseConverter {
 
   public override object? Convert(object? value, object? parameter) {
     if (value is not FrameworkElement fe
-        || fe.TryFindParent<ItemsControl>() is not { DataContext: ITreeItem { Parent: ICollectionViewGroup g } })
+        || fe.TryFindParent<ItemsControl>() is not { DataContext: FlatTreeItem {TreeItem : ITreeItem { Parent: ICollectionViewGroup g } } })
       return null;
-    
+
     fe.Width = g.GetItemSize(fe.DataContext, true);
     fe.Height = g.GetItemSize(fe.DataContext, false);
 

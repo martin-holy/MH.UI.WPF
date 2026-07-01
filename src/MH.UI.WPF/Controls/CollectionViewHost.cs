@@ -45,6 +45,10 @@ public class CollectionViewHost : TreeViewHost, UIC.ICollectionViewHost {
         ViewModel?.SetExpanded(btn.DataContext);
       }
     };
+
+    SizeChanged += (o, e) => {
+      if (e.WidthChanged) ViewModel?.SetWidth(e.NewSize.Width);
+    };
   }
 
   private static void _openItem(MouseButtonEventArgs? e) {
@@ -65,7 +69,7 @@ public class CollectionViewHost : TreeViewHost, UIC.ICollectionViewHost {
         || cv._doubleClicking()) return;
 
     var item = _getDataContext(e.OriginalSource);
-    var row = (e.Source as FrameworkElement)?.DataContext;
+    var row = ((e.Source as FrameworkElement)?.DataContext as FlatTreeItem)?.TreeItem;
     var btn = e.OriginalSource as Button ?? (e.OriginalSource as FrameworkElement)?.TryFindParent<Button>();
 
     if (item == null || row == null || btn != null) return;

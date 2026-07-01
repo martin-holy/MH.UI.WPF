@@ -1,6 +1,7 @@
 ﻿using MH.UI.Interfaces;
 using MH.UI.WPF.Extensions;
 using MH.Utils;
+using MH.Utils.BaseClasses;
 using MH.Utils.Interfaces;
 using System.Threading.Tasks;
 using System.Windows;
@@ -45,11 +46,11 @@ public class CatTreeView : TreeViewHost {
 
   private static Task _doDrop(object data, bool haveSameOrigin) {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return Task.CompletedTask;
-    var tvi = ((FrameworkElement)e.OriginalSource).FindTemplatedParent<TreeViewItem>();
-    if (tvi?.DataContext is not ITreeItem dest ||
+    var lbi = ((FrameworkElement)e.OriginalSource).FindTemplatedParent<ListBoxItem>();
+    if (lbi?.DataContext is not FlatTreeItem { TreeItem: ITreeItem dest } ||
         Tree.GetParentOf<ITreeCategory>(dest) is not { } cat) return Task.CompletedTask;
 
-    var aboveDest = e.GetPosition(tvi).Y < tvi.ActualHeight / 2;
+    var aboveDest = e.GetPosition(lbi).Y < lbi.ActualHeight / 2;
     return cat.OnDrop(data, dest, aboveDest, (e.KeyStates & DragDropKeyStates.ControlKey) > 0);
   }
 }

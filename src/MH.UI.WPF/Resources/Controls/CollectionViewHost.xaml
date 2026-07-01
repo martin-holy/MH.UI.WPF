@@ -8,36 +8,49 @@
   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
   xmlns:conv="clr-namespace:MH.UI.WPF.Converters"
   xmlns:mhuInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils"
+  xmlns:mhubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils"
   xmlns:rd="clr-namespace:MH.UI.WPF.Resources">
 
-  <u:TypeDataTemplateSelector x:Key="MH.DT.CollectionViewHost.TemplateSelector">
-    <u:TypeDataTemplateSelector.TemplateMappings>
+  <u:FlatTreeItemTemplateSelector x:Key="MH.DT.CollectionViewHost.TemplateSelector">
+    <u:FlatTreeItemTemplateSelector.TemplateMappings>
       <x:Array Type="{x:Type u:TypeTemplateMapping}">
-        <u:TypeTemplateMapping Type="{x:Type uic:CollectionViewGroup`1}" TemplateKey="MH.UI.Controls.CollectionViewGroup`1"/>
-        <u:TypeTemplateMapping Type="{x:Type uic:CollectionViewRow`1}" TemplateKey="MH.UI.Controls.CollectionViewRow`1"/>
+        <u:TypeTemplateMapping Type="{x:Type uic:CollectionViewGroup`1}" TemplateKey="MH.UI.Controls.CollectionViewGroup"/>
+        <u:TypeTemplateMapping Type="{x:Type uic:CollectionViewRow`1}" TemplateKey="MH.UI.Controls.CollectionViewRow"/>
       </x:Array>
-    </u:TypeDataTemplateSelector.TemplateMappings>
-  </u:TypeDataTemplateSelector>
+    </u:FlatTreeItemTemplateSelector.TemplateMappings>
+  </u:FlatTreeItemTemplateSelector>
 
-  <Style x:Key="MH.S.CollectionViewHost" TargetType="c:CollectionViewHost" BasedOn="{StaticResource MH.S.TreeViewHost}">
-    <Setter Property="ItemContainerStyle" Value="{DynamicResource MH.S.TreeViewItem.Lite}"/>
-    <Setter Property="ItemTemplateSelector" Value="{StaticResource MH.DT.CollectionViewHost.TemplateSelector}"/>
+  <Style x:Key="MH.S.CollectionViewTreeItem" TargetType="ListBoxItem">
+    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    <Setter Property="Foreground" Value="{StaticResource MH.B.C.Static.Fo}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <ContentPresenter
+            Content="{Binding}"
+            ContentTemplateSelector="{StaticResource MH.DT.CollectionViewHost.TemplateSelector}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
   </Style>
 
-  <HierarchicalDataTemplate
-    x:Key="MH.UI.Controls.CollectionViewGroup`1"
-    DataType="{x:Type uic:CollectionViewGroup`1}"
-    ItemsSource="{Binding Items}">
+  <Style x:Key="MH.S.CollectionViewHost" TargetType="c:CollectionViewHost" BasedOn="{StaticResource MH.S.TreeViewHost}">
+    <Setter Property="ItemContainerStyle" Value="{DynamicResource MH.S.CollectionViewTreeItem}"/>
+  </Style>
 
+  <DataTemplate x:Key="MH.UI.Controls.CollectionViewGroup" DataType="{x:Type mhubc:FlatTreeItem}">
     <Border
       x:Name="border"
       BorderBrush="Black"
       BorderThickness="1"
       Margin="1,2,1,2"
       Background="{DynamicResource MH.B.Black5}"
-      Height="30">
+      Height="30"
+      Padding="{Binding Converter={x:Static conv:TreeMarginConverter.Inst}, ConverterParameter=16}">
 
-      <Grid Margin="{Binding Converter={x:Static conv:TreeMarginConverter.Inst}, ConverterParameter=16}">
+      <Grid DataContext="{Binding TreeItem}">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto"/>
           <ColumnDefinition Width="Auto"/>
@@ -51,7 +64,10 @@
           Style="{DynamicResource MH.S.ToggleButton.TreeExpandCollapse}"
           IsChecked="{Binding IsExpanded, Mode=TwoWay}"/>
 
-        <c:TreeMenuHost Grid.Column="1" MenuFactory="{Binding BuildMenu}" Icon="{Binding Icon}"/>
+        <c:TreeMenuHost
+          Grid.Column="1"
+          MenuFactory="{Binding BuildMenu}"
+          Icon="{Binding Icon}"/>
 
         <TextBlock
           Grid.Column="2"
@@ -70,21 +86,12 @@
       </Grid>
     </Border>
 
-    <HierarchicalDataTemplate.Triggers>
-      <DataTrigger Binding="{Binding Items.Count}" Value="0">
+    <DataTemplate.Triggers>
+      <DataTrigger Binding="{Binding HasVisibleChildren}" Value="False">
         <Setter TargetName="expander" Property="Visibility" Value="Hidden"/>
       </DataTrigger>
-      <DataTrigger Value="True">
-        <DataTrigger.Binding>
-          <MultiBinding Converter="{x:Static conv:SetPropertyConverter.Inst}" ConverterParameter="Width">
-            <Binding ElementName="border" Path="DataContext"/>
-            <Binding ElementName="border" Path="ActualWidth"/>
-          </MultiBinding>
-        </DataTrigger.Binding>
-        <Setter TargetName="border" Property="Tag" Value="{x:Null}"/>
-      </DataTrigger>
-    </HierarchicalDataTemplate.Triggers>
-  </HierarchicalDataTemplate>
+    </DataTemplate.Triggers>
+  </DataTemplate>
 
   <DataTemplate x:Key="MH.DT.CollectionViewItem" DataType="{x:Type mhuInt:ISelectable}">
     <Grid UseLayoutRounding="True">
@@ -126,12 +133,12 @@
     </DataTemplate.Triggers>
   </DataTemplate>
 
-  <DataTemplate x:Key="MH.UI.Controls.CollectionViewRow`1" DataType="{x:Type uic:CollectionViewRow`1}">
+  <DataTemplate x:Key="MH.UI.Controls.CollectionViewRow" DataType="{x:Type mhubc:FlatTreeItem}">
     <ItemsControl
       x:Name="ic"
-      ItemsSource="{Binding Leaves}"
+      ItemsSource="{Binding TreeItem.Leaves}"
       ItemTemplate="{StaticResource MH.DT.CollectionViewItem}"
-      MaxWidth="{Binding Path=Parent.(uii:ICollectionViewGroup.Width)}">
+      MaxWidth="{Binding Path=TreeItem.Parent.(uii:ICollectionViewGroup.Width)}">
 
       <b:Interaction.Triggers>
         <b:EventTrigger EventName="PreviewMouseDoubleClick">
