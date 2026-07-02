@@ -1,7 +1,7 @@
 ﻿using MH.UI.Interfaces;
 using MH.UI.WPF.Extensions;
-using MH.Utils;
 using MH.Utils.BaseClasses;
+using MH.Utils.Extensions;
 using MH.Utils.Interfaces;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,7 +24,7 @@ public class CatTreeView : TreeViewHost {
   private static object? _canDrag(object source) =>
     source is ITreeCategory
       ? null
-      : Tree.GetParentOf<ITreeCategory>(source as ITreeItem) is null
+      : (source as ITreeItem).GetParentOf<ITreeCategory>() is null
         ? null
         : source;
 
@@ -32,7 +32,7 @@ public class CatTreeView : TreeViewHost {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return MH.Utils.DragDropEffects.None;
     _dragDropAutoScroll(e);
 
-    var cat = Tree.GetParentOf<ITreeCategory>(target as ITreeItem);
+    var cat = (target as ITreeItem).GetParentOf<ITreeCategory>();
 
     if (cat?.CanDrop(data, target as ITreeItem) == true) {
       if (target is ITreeGroup) return MH.Utils.DragDropEffects.Move;
@@ -48,7 +48,7 @@ public class CatTreeView : TreeViewHost {
     if (Utils.DragDropHelper.DragEventArgs is not { } e) return Task.CompletedTask;
     var lbi = ((FrameworkElement)e.OriginalSource).FindTemplatedParent<ListBoxItem>();
     if (lbi?.DataContext is not FlatTreeItem { TreeItem: ITreeItem dest } ||
-        Tree.GetParentOf<ITreeCategory>(dest) is not { } cat) return Task.CompletedTask;
+        dest.GetParentOf<ITreeCategory>() is not { } cat) return Task.CompletedTask;
 
     var aboveDest = e.GetPosition(lbi).Y < lbi.ActualHeight / 2;
     return cat.OnDrop(data, dest, aboveDest, (e.KeyStates & DragDropKeyStates.ControlKey) > 0);
