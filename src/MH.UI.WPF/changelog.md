@@ -3,6 +3,7 @@
 	- [N] FlatTreeItemTemplateSelector
 	- [U] TreeView and CollectionView FlatTree rewrite
 	- [U] MH.UI 6.0.0
+	- [U] MH.Utils 5.0.0
 
 4.0.1:
 	- [U] MH.UI v5.1.1
