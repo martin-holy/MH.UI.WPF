@@ -3,11 +3,11 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:c="clr-namespace:MH.UI.WPF.Controls"
   xmlns:dlg="clr-namespace:MH.UI.Dialogs;assembly=MH.UI"
-  xmlns:ubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils">
+  xmlns:mhut="clr-namespace:MH.Utils.Tree;assembly=MH.Utils">
   
   <DataTemplate x:Key="MH.UI.Dialogs.GroupByDialog" DataType="{x:Type dlg:GroupByDialog}">
     <DataTemplate.Resources>
-      <HierarchicalDataTemplate x:Key="DialogTreeItem" DataType="{x:Type ubc:TreeItem}" ItemsSource="{Binding Items}">
+      <HierarchicalDataTemplate x:Key="DialogTreeItem" DataType="{x:Type mhut:TreeItem}" ItemsSource="{Binding Items}">
         <ContentPresenter
           Content="{Binding Data}"
           ContentTemplateSelector="{Binding Source={x:Static c:CollectionViewHost.GroupByDialogDataTemplateSelector}}"

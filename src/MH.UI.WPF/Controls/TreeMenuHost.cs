@@ -1,4 +1,4 @@
-﻿using MH.Utils.Interfaces;
+﻿using MH.Utils.Tree;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -12,7 +12,7 @@ public class TreeMenuHost : Control {
 
   private static readonly DependencyPropertyKey MenuPropertyKey = DependencyProperty.RegisterReadOnly(
     nameof(Menu), typeof(IEnumerable<ITreeItem>), typeof(TreeMenuHost),
-    new PropertyMetadata(new ITreeItem[] { new MH.Utils.BaseClasses.TreeItem() }));
+    new PropertyMetadata(new ITreeItem[] { new TreeItem() }));
 
   public static readonly DependencyProperty MenuProperty = MenuPropertyKey.DependencyProperty;
 

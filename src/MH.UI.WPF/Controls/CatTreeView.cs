@@ -1,8 +1,6 @@
-﻿using MH.UI.Interfaces;
+﻿using MH.UI.Tree;
 using MH.UI.WPF.Extensions;
-using MH.Utils.BaseClasses;
-using MH.Utils.Extensions;
-using MH.Utils.Interfaces;
+using MH.Utils.Tree;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;

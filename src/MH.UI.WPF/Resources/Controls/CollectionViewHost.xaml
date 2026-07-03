@@ -8,7 +8,7 @@
   xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
   xmlns:conv="clr-namespace:MH.UI.WPF.Converters"
   xmlns:mhuInt="clr-namespace:MH.Utils.Interfaces;assembly=MH.Utils"
-  xmlns:mhubc="clr-namespace:MH.Utils.BaseClasses;assembly=MH.Utils"
+  xmlns:mhut="clr-namespace:MH.Utils.Tree;assembly=MH.Utils"
   xmlns:rd="clr-namespace:MH.UI.WPF.Resources">
 
   <u:FlatTreeItemTemplateSelector x:Key="MH.DT.CollectionViewHost.TemplateSelector">
@@ -40,7 +40,7 @@
     <Setter Property="ItemContainerStyle" Value="{DynamicResource MH.S.CollectionViewTreeItem}"/>
   </Style>
 
-  <DataTemplate x:Key="MH.UI.Controls.CollectionViewGroup" DataType="{x:Type mhubc:FlatTreeItem}">
+  <DataTemplate x:Key="MH.UI.Controls.CollectionViewGroup" DataType="{x:Type mhut:FlatTreeItem}">
     <Border
       x:Name="border"
       BorderBrush="Black"
@@ -133,7 +133,7 @@
     </DataTemplate.Triggers>
   </DataTemplate>
 
-  <DataTemplate x:Key="MH.UI.Controls.CollectionViewRow" DataType="{x:Type mhubc:FlatTreeItem}">
+  <DataTemplate x:Key="MH.UI.Controls.CollectionViewRow" DataType="{x:Type mhut:FlatTreeItem}">
     <ItemsControl
       x:Name="ic"
       ItemsSource="{Binding TreeItem.Leaves}"
