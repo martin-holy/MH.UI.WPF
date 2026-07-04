@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using MH.Utils.Imaging;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -33,10 +34,10 @@ public static class BitmapSourceExtensions {
   }
 
   public static long GetAvgHash(this BitmapSource bmp) =>
-    MH.Utils.Imaging.GetBitmapAvgHash(GetHashPixels(bmp, 8));
+    ImagingU.GetBitmapAvgHash(GetHashPixels(bmp, 8));
 
   public static long GetPerceptualHash(this BitmapSource bmp) =>
-    MH.Utils.Imaging.GetBitmapPerceptualHash(GetHashPixels(bmp, 32));
+    ImagingU.GetBitmapPerceptualHash(GetHashPixels(bmp, 32));
 
   public static void GetScale(this BitmapSource bmp, int size, out double x, out double y) {
     var pxW = bmp.PixelWidth;

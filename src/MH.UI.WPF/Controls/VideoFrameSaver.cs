@@ -2,6 +2,7 @@
 using MH.UI.Interfaces;
 using MH.UI.WPF.Extensions;
 using MH.Utils;
+using MH.Utils.Imaging;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -108,7 +109,7 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     var hash = _getHash();
     if (_timeOut.ElapsedMilliseconds > 2000)
       Log.Error("VideoFrameSaver TimeOut", _frame?.FilePath ?? string.Empty);
-    else if (Imaging.CompareHashes(_hash, hash) == 0) return;
+    else if (ImagingU.CompareHashes(_hash, hash) == 0) return;
     _capture = false;
     _hash = hash;
     _saveFrame();

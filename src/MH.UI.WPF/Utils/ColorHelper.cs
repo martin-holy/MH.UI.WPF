@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MH.Utils.Imaging;
+using System.Windows;
 using System.Windows.Media;
 
 namespace MH.UI.WPF.Utils;
@@ -24,9 +25,9 @@ public static class ColorHelper {
     var colorName = $"MH.Color.{name}";
     var brushName = $"MH.B.{name}";
 
-    MH.Utils.Imaging.RgbToHsl(color.R, color.G, color.B, out var h, out var s, out var l);
+    ImagingU.RgbToHsl(color.R, color.G, color.B, out var h, out var s, out var l);
     l = 50;
-    MH.Utils.Imaging.HslToRgb(h, s, l, out var r, out var g, out var b);
+    ImagingU.HslToRgb(h, s, l, out var r, out var g, out var b);
     var darkColor = Color.FromRgb(r, g, b);
     Application.Current.Resources[$"{colorName}-Dark"] = darkColor;
     Application.Current.Resources[$"{brushName}-Dark"] = CreateBrush(darkColor);

@@ -1,5 +1,6 @@
 ﻿using MH.UI.WPF.Controls;
 using MH.Utils.BaseClasses;
+using MH.Utils.Imaging;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -14,8 +15,8 @@ public static class Init {
 
     MH.Utils.Clipboard.SetText = Clipboard.SetText;
 
-    MH.Utils.Imaging.GetBitmapHashPixels = Imaging.GetBitmapHashPixels;
-    MH.Utils.Imaging.ResizeJpg = Imaging.ResizeJpg;
+    ImagingU.GetBitmapHashPixels = Imaging.GetBitmapHashPixels;
+    ImagingU.ResizeJpg = Imaging.ResizeJpg;
 
     MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
     MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
