@@ -97,7 +97,7 @@
     <Grid UseLayoutRounding="True">
       <Border
         x:Name="border"
-        BorderThickness="2"
+        BorderThickness="{Binding Source={x:Static uic:CollectionView.ItemBorderSize}}"
         BorderBrush="Black"
         Margin="1">
 
@@ -109,7 +109,7 @@
 
       <Border
         x:Name="selectionBorder"
-        BorderThickness="2"
+        BorderThickness="{Binding Source={x:Static uic:CollectionView.ItemBorderSize}}"
         BorderBrush="{DynamicResource MH.B.Accent}"
         Margin="0"
         Visibility="Hidden">
