@@ -4,6 +4,7 @@
 	- [U] TreeView and CollectionView FlatTree rewrite
 	- [U] MH.UI 6.0.0
 	- [U] MH.Utils 5.0.0
+	- [U] CollectionViewItem DataTemplate binding to ItemBorderSize
 
 4.0.1:
 	- [U] MH.UI v5.1.1
