@@ -1,3 +1,7 @@
+5.0.1:
+	- [U] MH.UI 6.0.1
+	- [U] MH.Utils 5.0.1
+
 5.0.0:
 	- [B] Init: Tasks.Dispatch
 	- [N] FlatTreeItemTemplateSelector
