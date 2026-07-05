@@ -1,4 +1,4 @@
-5.0.0(not released):
+5.0.0:
 	- [B] Init: Tasks.Dispatch
 	- [N] FlatTreeItemTemplateSelector
 	- [U] TreeView and CollectionView FlatTree rewrite
