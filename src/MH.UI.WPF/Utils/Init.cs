@@ -17,6 +17,7 @@ public static class Init {
 
     ImagingU.GetBitmapHashPixels = Imaging.GetBitmapHashPixels;
     ImagingU.ResizeJpg = Imaging.ResizeJpg;
+    ImagingU.EncodeJpegTo = Imaging.EncodeJpegTo;
 
     MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
     MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
