@@ -10,6 +10,38 @@ using System.Windows.Media.Imaging;
 namespace MH.UI.WPF.Utils;
 
 public static class Imaging {
+  public static void EncodeJpegTo(Stream output, string filePath, int quality, int width = 0, int height = 0) {
+    using var sourceStream = File.OpenRead(filePath);
+
+    var decoder = BitmapDecoder.Create(
+      sourceStream,
+      BitmapCreateOptions.PreservePixelFormat,
+      BitmapCacheOption.OnLoad);
+
+    if (decoder.CodecInfo?.FileExtensions.Contains("jpg") != true)
+      throw new InvalidDataException("The source image is not a JPEG.");
+
+    var frame = decoder.Frames[0];
+
+    BitmapSource image = frame;
+
+    if (width > 0 && height > 0 && (frame.PixelWidth != width || frame.PixelHeight != height)) {
+      var stw = (double)width / frame.PixelWidth;
+      var sth = (double)height / frame.PixelHeight;
+      image = new TransformedBitmap(frame, new ScaleTransform(stw, sth));
+    }
+
+    var encoder = new JpegBitmapEncoder { QualityLevel = quality };
+
+    encoder.Frames.Add(BitmapFrame.Create(
+      image,
+      frame.Thumbnail,
+      frame.Metadata?.Clone() as BitmapMetadata,
+      frame.ColorContexts));
+
+    encoder.Save(output);
+  }
+
   public static void ResizeJpg(string src, string dest, int px, bool withMetadata, bool withThumbnail, int quality) {
     var srcFile = new FileInfo(src);
     var destFile = new FileInfo(dest);
