@@ -1,3 +1,6 @@
+5.1.0(not released):
+	- [N] Imaging: EncodeJpegTo method
+
 5.0.1:
 	- [U] MH.UI 6.0.1
 	- [U] MH.Utils 5.0.1
