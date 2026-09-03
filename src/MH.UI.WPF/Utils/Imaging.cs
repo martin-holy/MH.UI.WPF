@@ -10,7 +10,9 @@ using System.Windows.Media.Imaging;
 namespace MH.UI.WPF.Utils;
 
 public static class Imaging {
-  public static void EncodeJpegTo(Stream output, string filePath, int quality, int width = 0, int height = 0) {
+  public static void EncodeJpegTo(Stream output, string filePath, int quality,
+    bool withMetadata = true, bool withThumbnail = true, int width = 0, int height = 0) {
+
     using var sourceStream = File.OpenRead(filePath);
 
     var decoder = BitmapDecoder.Create(
@@ -31,14 +33,11 @@ public static class Imaging {
       image = new TransformedBitmap(frame, new ScaleTransform(stw, sth));
     }
 
+    var thumbnail = withThumbnail ? frame.Thumbnail : null;
+    var metadata = withMetadata ? frame.Metadata?.Clone() as BitmapMetadata ?? new("jpg") : new("jpg");
     var encoder = new JpegBitmapEncoder { QualityLevel = quality };
 
-    encoder.Frames.Add(BitmapFrame.Create(
-      image,
-      frame.Thumbnail,
-      frame.Metadata?.Clone() as BitmapMetadata,
-      frame.ColorContexts));
-
+    encoder.Frames.Add(BitmapFrame.Create(image, thumbnail, metadata, frame.ColorContexts));
     encoder.Save(output);
   }
 
