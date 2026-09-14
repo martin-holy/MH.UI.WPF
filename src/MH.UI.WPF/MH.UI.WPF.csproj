@@ -21,13 +21,13 @@
 		<PackageTags>
 			WPF, UI, controls, dialogs, converters, media, zoom, pan, TreeView, CollectionView, TabControl, Icon, Slider, Button, CustomWindow, MVVM
 		</PackageTags>
-		<PackageLicenseExpression>CC0-1.0</PackageLicenseExpression>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/martin-holy/MH.UI.WPF</RepositoryUrl>
 
-		<Version>5.0.1</Version>
+		<Version>5.1.0</Version>
 		<AssemblyVersion>5.0.0.0</AssemblyVersion>
-		<FileVersion>5.0.1.0</FileVersion>
+		<FileVersion>5.1.0.0</FileVersion>
 
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -38,8 +38,8 @@
   </ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<PackageReference Include="MH.UI" Version="6.0.1" />
-		<PackageReference Include="MH.Utils" Version="5.0.1" />
+		<PackageReference Include="MH.UI" Version="6.1.0" />
+		<PackageReference Include="MH.Utils" Version="5.1.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Debug'">
