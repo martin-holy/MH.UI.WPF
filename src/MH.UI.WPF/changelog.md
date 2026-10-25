@@ -1,3 +1,6 @@
+5.2.0(not released):
+	- [U] VideoFrameSaver: Open timeout
+
 5.1.0:
 	- [N] Imaging: EncodeJpegTo method
 	- [U] MH.UI 6.1.0
