@@ -25,6 +25,7 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
   private VfsVideo? _video;
   private VfsFrame? _frame;
   private readonly Stopwatch _timeOut = new();
+  private readonly DispatcherTimer _openTimeout;
   private Action<VfsFrame>? _onSaveAction;
   private Action<VfsFrame, Exception>? _onErrorAction;
   private Action? _onFinishedAction;
@@ -37,6 +38,8 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     StretchDirection = StretchDirection.Both;
     ScrubbingEnabled = true;
     MediaOpened += delegate { _onMediaOpened(); };
+    _openTimeout = new() { Interval = TimeSpan.FromSeconds(2) };
+    _openTimeout.Tick += _openTimeout_Tick;
   }
 
   public void Save(VfsVideo[] videos, Action<VfsFrame>? onSaveAction, Action<VfsFrame, Exception>? onErrorAction, Action? onFinishedAction) {
@@ -52,8 +55,11 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
   }
 
   private void _nextVideo() {
+    _openTimeout.Stop();
+
     if (_idxVideo + 1 > _videos!.Length - 1) {
       CompositionTarget.Rendering -= _compositionTargetOnRendering;
+      Close();
       Source = null;
       _frame = null;
       _video = null;
@@ -63,12 +69,18 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     }
 
     _video = _videos[++_idxVideo];
+
+    Close();
+    Source = null;
     Source = new(_video.FilePath);
+    _openTimeout.Start();
     Play();
     Stop();
   }
 
   private void _onMediaOpened() {
+    _openTimeout.Stop();
+
     if (NaturalVideoWidth + NaturalVideoHeight == 0) {
       _nextVideo();
       return;
@@ -80,6 +92,25 @@ public class VideoFrameSaver : MediaElement, IVideoFrameSaver {
     Width = NaturalVideoWidth;
     Height = NaturalVideoHeight;
     Dispatcher.BeginInvoke(DispatcherPriority.Loaded, _nextFrame);
+  }
+
+  private void _openTimeout_Tick(object? sender, EventArgs e) {
+    _openTimeout.Stop();
+
+    if (_video == null) return;
+
+    _capture = false;
+    _timeOut.Stop();
+
+    var ex = new TimeoutException("VideoFrameSaver: MediaOpened timeout.");
+
+    foreach (var frame in _video.Frames)
+      _onErrorAction?.Invoke(frame, ex);
+
+    Stop();
+    Source = null;
+    Close();
+    _nextVideo();
   }
 
   private void _nextFrame() {
