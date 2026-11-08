@@ -1,6 +1,8 @@
 5.2.0(not released):
 	- [U] VideoFrameSaver: Open timeout
 	- [B] Imaging: EncodeJpegTo, Exif thumbnail
+	- [N] DropTargetHighlight: IsDragOver dependency property
+	- [N] TreeViewItem highlight when drag over
 
 5.1.0:
 	- [N] Imaging: EncodeJpegTo method
