@@ -33,11 +33,13 @@ public static class Imaging {
       image = new TransformedBitmap(frame, new ScaleTransform(stw, sth));
     }
 
-    var thumbnail = withThumbnail ? frame.Thumbnail : null;
     var metadata = withMetadata ? frame.Metadata?.Clone() as BitmapMetadata ?? new("jpg") : new("jpg");
     var encoder = new JpegBitmapEncoder { QualityLevel = quality };
 
-    encoder.Frames.Add(BitmapFrame.Create(image, thumbnail, metadata, frame.ColorContexts));
+    if (!withThumbnail)
+      metadata.RemoveQuery("/app1/thumb");
+
+    encoder.Frames.Add(BitmapFrame.Create(image, null, metadata, frame.ColorContexts));
     encoder.Save(output);
   }
 
