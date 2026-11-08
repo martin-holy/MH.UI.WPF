@@ -1,5 +1,6 @@
 5.2.0(not released):
 	- [U] VideoFrameSaver: Open timeout
+	- [B] Imaging: EncodeJpegTo, Exif thumbnail
 
 5.1.0:
 	- [N] Imaging: EncodeJpegTo method
