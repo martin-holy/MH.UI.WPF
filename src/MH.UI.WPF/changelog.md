@@ -3,6 +3,7 @@
 	- [B] Imaging: EncodeJpegTo, Exif thumbnail
 	- [N] DropTargetHighlight: IsDragOver dependency property
 	- [N] TreeViewItem highlight when drag over
+	- [N] TreeContextMenuBuilder
 
 5.1.0:
 	- [N] Imaging: EncodeJpegTo method
