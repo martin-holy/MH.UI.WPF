@@ -19,11 +19,13 @@ public static class Init {
     ImagingU.ResizeJpg = Imaging.ResizeJpg;
     ImagingU.EncodeJpegTo = Imaging.EncodeJpegTo;
 
-    MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
-    MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
-
     MH.Utils.Tasks.Dispatch = action => Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
 
     CommandManager.RequerySuggested += RelayCommandBase.RaiseAllCanExecuteChanged;
+  }
+
+  public static void SetDialogImplementation() {
+    MH.UI.Controls.Dialog.SetShowImplementation(DialogHost.Show);
+    MH.UI.Controls.Dialog.SetShowAsyncImplementation(DialogHost.ShowAsync);
   }
 }
