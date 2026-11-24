@@ -4,6 +4,7 @@
 	- [N] DropTargetHighlight: IsDragOver dependency property
 	- [N] TreeViewItem highlight when drag over
 	- [N] TreeContextMenuBuilder
+	- [U] SetDialogImplementation extracted from SetDelegates so it can be called separately because of localization
 
 5.1.0:
 	- [N] Imaging: EncodeJpegTo method
